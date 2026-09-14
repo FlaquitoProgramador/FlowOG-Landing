@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  /* Paleta base tomada del bundle "Flow OG Portfolio" */
+  --color-og-ink: #0b0b0b;
+  --color-og-bone: #f2efe8;
+  --color-og-lime: #d9f20d;
+
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: var(--color-og-ink);
+  color: var(--color-og-bone);
+}
