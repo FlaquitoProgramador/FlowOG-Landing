@@ -15,112 +15,142 @@ import bizMusica from "../assets/bizMusica.png";
  * La tipografía es la del artboard (Anton en mayúsculas), no la serif del original.
  */
 const negocios = [
-  {
-    nombre: "Ropa",
-    etiqueta: "01 — Ropa urbana",
-    descripcion:
-      "Tiradas cortas, diseño propio y estampado a mano. La línea que abrió la marca.",
-    tags: ["Hoodies", "Tees", "Drops limitados"],
-    image: bizRopa,
-    alt: "Prendas de la línea de ropa urbana Flow OG",
-  },
-  {
-    nombre: "Sports",
-    etiqueta: "02 — Deportivo",
-    descripcion:
-      "Uniformes y ropa deportiva para equipos y ligas de Quito. Aguanta la cancha.",
-    tags: ["Uniformes", "Equipos", "Personalizado"],
-    image: bizSports,
-    alt: "Logotipo de Flow OG Sports",
-  },
-  {
-    nombre: "Música",
-    etiqueta: "03 — Música",
-    descripcion:
-      "Sencillos y colabs bajo el sello Flow OG. «You Got It» con Xavi Ykz y Tenzin.",
-    tags: ["Singles", "Colabs", "Sello propio"],
-    image: bizMusica,
-    alt: "Portada del single «You Got It»",
-  },
+	{
+		nombre: "Ropa",
+		etiqueta: "01 — Ropa urbana",
+		descripcion:
+			"Tiradas cortas, diseño propio y estampado a mano. La línea que abrió la marca.",
+		tags: ["Hoodies", "Tees", "Drops limitados"],
+		image: bizRopa,
+		alt: "Prendas de la línea de ropa urbana Flow OG",
+	},
+	{
+		nombre: "Sports",
+		etiqueta: "02 — Deportivo",
+		descripcion:
+			"Uniformes y ropa deportiva para equipos y ligas de Quito. Aguanta la cancha.",
+		tags: ["Uniformes", "Equipos", "Personalizado"],
+		image: bizSports,
+		alt: "Logotipo de Flow OG Sports",
+	},
+	{
+		nombre: "Música",
+		etiqueta: "03 — Música",
+		descripcion:
+			"Sencillos y colabs bajo el sello Flow OG. «You Got It» con Xavi Ykz y Tenzin.",
+		tags: ["Singles", "Colabs", "Sello propio"],
+		image: bizMusica,
+		alt: "Portada del single «You Got It»",
+	},
 ];
 
 const medias = await Promise.all(
-  negocios.map(async (negocio) => {
-    const optimizada = await getImage({ src: negocio.image, width: 700, format: "webp" });
-    return {
-      src: optimizada.src,
-      width: 700,
-      height: Math.round((700 * negocio.image.height) / negocio.image.width),
-    };
-  }),
+	negocios.map(async (negocio) => {
+		const optimizada = await getImage({
+			src: negocio.image,
+			width: 700,
+			format: "webp",
+		});
+		return {
+			src: optimizada.src,
+			width: 700,
+			height: Math.round(
+				(700 * negocio.image.height) / negocio.image.width,
+			),
+		};
+	}),
 );
 ---
 
 <section class="negocios" id="negocios" aria-labelledby="negocios-titulo">
 	<header class="negocios__head og-rule">
 		<div class="negocios__head__group">
-			<h2 class="og-title" id="negocios-titulo">Los Negocios</h2>
-			<span class="negocios__star" aria-hidden="true">✶</span>
+			<h2 class="og-title" id="negocios-titulo">
+				Los Negocios
+			</h2>
+			<span class="negocios__star" aria-hidden="true">
+				✶
+			</span>
 		</div>
-		<a class="negocios__head__link" href="https://instagram.com/flowog_premium" aria-label="Ver todo en Instagram">
+		<a
+			class="negocios__head__link"
+			href="https://instagram.com/flowog_premium"
+			aria-label="Ver todo en Instagram"
+		>
 			<span>Ver todo en Instagram</span>
-			<span class="og-circle" aria-hidden="true">⟶</span>
+			<span class="og-circle" aria-hidden="true">
+				⟶
+			</span>
 		</a>
 	</header>
 
 	<div class="negocios__stage">
 		<div class="negocios__medias">
-			{
-				medias.map((media, i) => (
-					<figure class="negocios__medias__media">
-						<img
-							class="negocios__medias__image"
-							src={media.src}
-							alt={negocios[i].alt}
-							width={media.width}
-							height={media.height}
-							loading="eager"
-							decoding="async"
-							draggable="false"
-						/>
-					</figure>
-				))
-			}
+			{medias.map((media, i) => (
+				<figure class="negocios__medias__media">
+					<img
+						class="negocios__medias__image"
+						src={media.src}
+						alt={negocios[i].alt}
+						width={media.width}
+						height={media.height}
+						loading="eager"
+						decoding="async"
+						draggable="false"
+					/>
+				</figure>
+			))}
 		</div>
 
 		<div class="negocios__panel">
 			<ul class="negocios__list">
-				{
-					negocios.map((negocio, i) => (
-						<li class="negocios__list__item">
-							<button class="negocios__list__link" type="button" data-index={i}>
-								<span class="negocios__list__text" aria-hidden="true">
-									{negocio.nombre}
-								</span>
-								<span class="negocios__list__text" aria-hidden="true">
-									{negocio.nombre}
-								</span>
-								<span class="negocios__list__label">{negocio.nombre}</span>
-							</button>
-						</li>
-					))
-				}
+				{negocios.map((negocio, i) => (
+					<li class="negocios__list__item">
+						<button
+							class="negocios__list__link"
+							type="button"
+							data-index={i}
+						>
+							<span
+								class="negocios__list__text"
+								aria-hidden="true"
+							>
+								{negocio.nombre}
+							</span>
+							<span
+								class="negocios__list__text"
+								aria-hidden="true"
+							>
+								{negocio.nombre}
+							</span>
+							<span class="negocios__list__label">
+								{negocio.nombre}
+							</span>
+						</button>
+					</li>
+				))}
 			</ul>
 
 			<div class="negocios__detail">
-				{
-					negocios.map((negocio, i) => (
-						<article class="negocios__detail__card" data-index={i} aria-hidden={i !== 0}>
-							<p class="negocios__detail__eyebrow">{negocio.etiqueta}</p>
-							<p class="negocios__detail__desc">{negocio.descripcion}</p>
-							<ul class="negocios__detail__tags">
-								{negocio.tags.map((tag) => (
-									<li class="og-chip">{tag}</li>
-								))}
-							</ul>
-						</article>
-					))
-				}
+				{negocios.map((negocio, i) => (
+					<article
+						class="negocios__detail__card"
+						data-index={i}
+						aria-hidden={i !== 0}
+					>
+						<p class="negocios__detail__eyebrow">
+							{negocio.etiqueta}
+						</p>
+						<p class="negocios__detail__desc">
+							{negocio.descripcion}
+						</p>
+						<ul class="negocios__detail__tags">
+							{negocio.tags.map((tag) => (
+								<li class="og-chip">{tag}</li>
+							))}
+						</ul>
+					</article>
+				))}
 			</div>
 		</div>
 
@@ -149,9 +179,25 @@ const medias = await Promise.all(
 	<footer class="negocios__bar">
 		<p class="negocios__bar__hint">Pasa el cursor o usa las flechas</p>
 		<div class="negocios__bar__nav">
-			<span class="negocios__counter" aria-live="polite">01 / 03</span>
-			<button class="negocios__arrow" type="button" data-paso="-1" aria-label="Negocio anterior">⟵</button>
-			<button class="negocios__arrow" type="button" data-paso="1" aria-label="Negocio siguiente">⟶</button>
+			<span class="negocios__counter" aria-live="polite">
+				01 / 03
+			</span>
+			<button
+				class="negocios__arrow"
+				type="button"
+				data-paso="-1"
+				aria-label="Negocio anterior"
+			>
+				⟵
+			</button>
+			<button
+				class="negocios__arrow"
+				type="button"
+				data-paso="1"
+				aria-label="Negocio siguiente"
+			>
+				⟶
+			</button>
 		</div>
 	</footer>
 </section>
@@ -254,8 +300,16 @@ const medias = await Promise.all(
 	/* ---------- escenario ---------- */
 	.negocios__stage {
 		background:
-			radial-gradient(circle at 26% 38%, rgb(217 242 13 / 0.11), transparent 42%),
-			radial-gradient(circle at 72% 42%, rgb(217 242 13 / 0.06), transparent 48%);
+			radial-gradient(
+				circle at 26% 38%,
+				rgb(217 242 13 / 0.11),
+				transparent 42%
+			),
+			radial-gradient(
+				circle at 72% 42%,
+				rgb(217 242 13 / 0.06),
+				transparent 48%
+			);
 		height: min(88vh, 820px);
 		min-height: 560px;
 		overflow: hidden;
@@ -624,20 +678,30 @@ const medias = await Promise.all(
 
 	function iniciarNegocios(seccion: HTMLElement) {
 		const enlaces = Array.from(
-			seccion.querySelectorAll<HTMLButtonElement>(".negocios__list__link"),
+			seccion.querySelectorAll<HTMLButtonElement>(
+				".negocios__list__link",
+			),
 		);
-		const contenedor = seccion.querySelector<HTMLElement>(".negocios__medias");
+		const contenedor =
+			seccion.querySelector<HTMLElement>(".negocios__medias");
 		const imagenes = Array.from(
 			seccion.querySelectorAll<HTMLElement>(".negocios__medias__media"),
 		);
-		const fichas = Array.from(seccion.querySelectorAll<HTMLElement>(".negocios__detail__card"));
-		const overlay = seccion.querySelector<HTMLElement>(".negocios__dissolve");
-		const contador = seccion.querySelector<HTMLElement>(".negocios__counter");
+		const fichas = Array.from(
+			seccion.querySelectorAll<HTMLElement>(".negocios__detail__card"),
+		);
+		const overlay = seccion.querySelector<HTMLElement>(
+			".negocios__dissolve",
+		);
+		const contador =
+			seccion.querySelector<HTMLElement>(".negocios__counter");
 
 		if (!contenedor || !overlay || imagenes.length === 0) return;
 
 		const total = imagenes.length;
-		const movimientoReducido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		const movimientoReducido = window.matchMedia(
+			"(prefers-reduced-motion: reduce)",
+		).matches;
 		const columna = { actual: 0, objetivo: 0, entrada: 1 };
 
 		// Medidas cacheadas: leerlas dentro del rAF fuerza un layout sincrónico por frame.
@@ -650,7 +714,10 @@ const medias = await Promise.all(
 
 		/** Coloca el frame f (0..79) del sprite-sheet. */
 		const mostrarFrame = (f: number) => {
-			const indice = Math.max(0, Math.min(COLUMNAS * FILAS - 1, Math.floor(f)));
+			const indice = Math.max(
+				0,
+				Math.min(COLUMNAS * FILAS - 1, Math.floor(f)),
+			);
 			const x = ((indice % COLUMNAS) / (COLUMNAS - 1)) * 100;
 			const y = (Math.floor(indice / COLUMNAS) / (FILAS - 1)) * 100;
 			overlay.style.maskPosition = x + "% " + y + "%";
@@ -668,10 +735,16 @@ const medias = await Promise.all(
 			imagenes.forEach((imagen, i) => {
 				const crudo = (i - columna.actual) * paso;
 				// Loop infinito: normaliza la distancia al centro dentro de [-vuelta/2, vuelta/2).
-				const distancia = ((((crudo + vuelta / 2) % vuelta) + vuelta) % vuelta) - vuelta / 2;
+				const distancia =
+					((((crudo + vuelta / 2) % vuelta) + vuelta) % vuelta) -
+					vuelta / 2;
 
-				const rotacion = (distancia / (total * alto * 0.5)) * ROTACION_MAX;
-				const arco = -ARCO * ancho * Math.max(0, 1 - Math.abs(distancia) / (alto * 0.5));
+				const rotacion =
+					(distancia / (total * alto * 0.5)) * ROTACION_MAX;
+				const arco =
+					-ARCO *
+					ancho *
+					Math.max(0, 1 - Math.abs(distancia) / (alto * 0.5));
 
 				imagen.style.transform =
 					"translate3d(" +
@@ -690,7 +763,9 @@ const medias = await Promise.all(
 
 		const bucle = () => {
 			columna.actual += (columna.objetivo - columna.actual) * 0.075;
-			const listo = !arrastrando && Math.abs(columna.objetivo - columna.actual) < QUIETO;
+			const listo =
+				!arrastrando &&
+				Math.abs(columna.objetivo - columna.actual) < QUIETO;
 			if (listo) columna.actual = columna.objetivo;
 			posicionar();
 			raf = listo ? 0 : requestAnimationFrame(bucle);
@@ -716,14 +791,20 @@ const medias = await Promise.all(
 			columna.objetivo = i;
 			animar();
 
-			enlaces.forEach((enlace, n) => enlace.setAttribute("data-activo", String(n === i)));
+			enlaces.forEach((enlace, n) =>
+				enlace.setAttribute("data-activo", String(n === i)),
+			);
 
 			fichas.forEach((ficha, n) => {
 				ficha.setAttribute("aria-hidden", String(n !== i));
 				if (movimientoReducido) {
 					ficha.style.opacity = n === i ? "1" : "0";
 				} else {
-					gsap.to(ficha, { opacity: n === i ? 1 : 0, duration: 0.45, ease: "power2.out" });
+					gsap.to(ficha, {
+						opacity: n === i ? 1 : 0,
+						duration: 0.45,
+						ease: "power2.out",
+					});
 				}
 			});
 
@@ -732,7 +813,9 @@ const medias = await Promise.all(
 
 		// ---- hover: giro 3D letra por letra (port del timeline de mattjinn) ----
 		enlaces.forEach((enlace, i) => {
-			const textos = enlace.querySelectorAll<HTMLElement>(".negocios__list__text");
+			const textos = enlace.querySelectorAll<HTMLElement>(
+				".negocios__list__text",
+			);
 			let entrar = () => activar(i);
 
 			if (!movimientoReducido && textos.length === 2) {
@@ -754,8 +837,18 @@ const medias = await Promise.all(
 				);
 				linea.fromTo(
 					entrantes,
-					{ autoAlpha: 0, rotateX: 90, transformOrigin: "50% 50% -30px" },
-					{ autoAlpha: 1, duration: 1, ease: "power4.out", rotateX: 0, stagger: 0.05 },
+					{
+						autoAlpha: 0,
+						rotateX: 90,
+						transformOrigin: "50% 50% -30px",
+					},
+					{
+						autoAlpha: 1,
+						duration: 1,
+						ease: "power4.out",
+						rotateX: 0,
+						stagger: 0.05,
+					},
 					0,
 				);
 
@@ -773,11 +866,13 @@ const medias = await Promise.all(
 			enlace.addEventListener("click", entrar);
 		});
 
-		seccion.querySelectorAll<HTMLElement>(".negocios__arrow").forEach((boton) => {
-			boton.addEventListener("click", () => {
-				activar(activo + Number(boton.dataset.paso ?? 1));
+		seccion
+			.querySelectorAll<HTMLElement>(".negocios__arrow")
+			.forEach((boton) => {
+				boton.addEventListener("click", () => {
+					activar(activo + Number(boton.dataset.paso ?? 1));
+				});
 			});
-		});
 
 		activar(0);
 
@@ -797,7 +892,9 @@ const medias = await Promise.all(
 
 		contenedor.addEventListener("pointermove", (evento) => {
 			if (!arrastrando) return;
-			columna.objetivo = objetivoInicial - (evento.clientY - inicioY) / (alto * SEPARACION);
+			columna.objetivo =
+				objetivoInicial -
+				(evento.clientY - inicioY) / (alto * SEPARACION);
 		});
 
 		const terminarArrastre = () => {
@@ -854,5 +951,7 @@ const medias = await Promise.all(
 		observador.observe(seccion);
 	}
 
-	document.querySelectorAll<HTMLElement>(".negocios").forEach(iniciarNegocios);
+	document
+		.querySelectorAll<HTMLElement>(".negocios")
+		.forEach(iniciarNegocios);
 </script>
