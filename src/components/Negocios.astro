@@ -31,9 +31,7 @@ const negocios = [
       "Uniformes y ropa deportiva para equipos y ligas de Quito. Aguanta la cancha.",
     tags: ["Uniformes", "Equipos", "Personalizado"],
     image: bizSports,
-    // El artboard no trae foto para Sports: este slot es un marcador.
-    alt: "",
-    pendiente: true,
+    alt: "Logotipo de Flow OG Sports",
   },
   {
     nombre: "Música",
@@ -85,9 +83,6 @@ const medias = await Promise.all(
 							decoding="async"
 							draggable="false"
 						/>
-						{negocios[i].pendiente && (
-							<figcaption class="negocios__medias__pendiente">Foto pendiente</figcaption>
-						)}
 					</figure>
 				))
 			}
@@ -258,6 +253,9 @@ const medias = await Promise.all(
 
 	/* ---------- escenario ---------- */
 	.negocios__stage {
+		background:
+			radial-gradient(circle at 26% 38%, rgb(217 242 13 / 0.11), transparent 42%),
+			radial-gradient(circle at 72% 42%, rgb(217 242 13 / 0.06), transparent 48%);
 		height: min(88vh, 820px);
 		min-height: 560px;
 		overflow: hidden;
@@ -278,13 +276,17 @@ const medias = await Promise.all(
 
 	.negocios__medias__media {
 		background: var(--color-og-panel);
+		border: 1px solid rgb(217 242 13 / 0.28);
+		box-shadow:
+			0 22px 48px rgb(0 0 0 / 0.65),
+			0 0 32px rgb(217 242 13 / 0.1);
 		height: max(238px, calc(var(--og-u) * 40));
 		left: calc(var(--og-u) * 25);
 		margin: 0;
 		/* centra verticalmente sin depender del alto resuelto por max() */
 		margin-top: calc(-0.5 * max(238px, var(--og-u) * 40));
 		position: absolute;
-		top: 50%;
+		top: calc(50% - 115px);
 		transform: translate3d(-50cqi, 0, 0);
 		width: max(200px, calc(var(--og-u) * 33.6));
 		will-change: transform;
@@ -292,21 +294,11 @@ const medias = await Promise.all(
 
 	.negocios__medias__image {
 		display: block;
+		filter: saturate(1.2) contrast(1.05);
 		height: 100%;
 		object-fit: cover;
 		user-select: none;
 		width: 100%;
-	}
-
-	.negocios__medias__pendiente {
-		bottom: 12px;
-		color: var(--color-og-muted);
-		font-family: var(--font-mono);
-		font-size: 10px;
-		left: 12px;
-		letter-spacing: 0.16em;
-		position: absolute;
-		text-transform: uppercase;
 	}
 
 	/* ---------- panel: lista + detalle ---------- */
@@ -469,6 +461,12 @@ const medias = await Promise.all(
 		padding: 0;
 	}
 
+	.negocios__detail__tags .og-chip {
+		background: rgb(217 242 13 / 0.07);
+		border-color: rgb(217 242 13 / 0.38);
+		color: var(--color-og-bone);
+	}
+
 	/* ---------- overlay del dissolve ---------- */
 	.negocios__dissolve {
 		background: var(--color-og-ink);
@@ -490,19 +488,54 @@ const medias = await Promise.all(
 	}
 
 	/* ---------- responsive (el artboard es de ancho fijo: re-derivado) ---------- */
-	@container negocios (max-width: 1080px) {
-		.negocios__panel {
-			left: 6cqi;
-			right: 6cqi;
+	@container negocios (max-width: 960px) {
+		.negocios__stage {
+			display: flex;
+			flex-direction: column;
+			height: auto;
+			min-height: 0;
 		}
 
 		.negocios__medias {
-			opacity: 0.28;
+			border-bottom: 1px solid var(--color-og-line);
+			height: clamp(320px, 68cqi, 420px);
+			inset: auto;
+			opacity: 1;
+			overflow: hidden;
+			position: relative;
+			width: 100%;
 		}
 
 		.negocios__medias__media {
+			--media-w-m: clamp(210px, 48cqi, 290px);
+			--media-h-m: clamp(250px, 57cqi, 345px);
+			height: var(--media-h-m);
+			/* 55% compensa el desplazamiento arco (-5cqi) del centro activo en JS */
+			left: calc(55% - 0.5 * var(--media-w-m));
+			margin-top: calc(-0.5 * var(--media-h-m));
+			right: auto;
+			top: 50%;
+			width: var(--media-w-m);
+		}
+
+		.negocios__panel {
+			height: auto;
 			left: auto;
-			right: 4cqi;
+			padding: 28px 24px 32px;
+			position: relative;
+			right: auto;
+			top: auto;
+		}
+
+		.negocios__list__item:nth-child(2),
+		.negocios__list__item:nth-child(3) {
+			margin-left: 0;
+		}
+
+		.negocios__detail {
+			margin-top: 24px;
+			max-width: 100%;
+			min-height: 175px;
 		}
 	}
 
@@ -517,18 +550,35 @@ const medias = await Promise.all(
 			display: none;
 		}
 
-		.negocios__list {
-			font-size: 13cqi;
+		.negocios__medias {
+			height: clamp(290px, 76cqi, 360px);
 		}
 
-		.negocios__list__item:nth-child(2),
-		.negocios__list__item:nth-child(3) {
-			margin-left: 0;
+		.negocios__medias__media {
+			--media-w-m: clamp(195px, 54cqi, 250px);
+			--media-h-m: clamp(232px, 64cqi, 298px);
+		}
+
+		.negocios__panel {
+			padding: 22px 18px 26px;
+		}
+
+		.negocios__list {
+			font-size: clamp(36px, 11.5cqi, 52px);
+		}
+
+		.negocios__list__item:not(:first-child) {
+			margin-top: 12px;
 		}
 
 		.negocios__detail {
-			margin-top: 28px;
-			min-height: 210px;
+			margin-top: 22px;
+			min-height: 195px;
+		}
+
+		.negocios__bar__hint {
+			font-size: 9.5px;
+			letter-spacing: 0.1em;
 		}
 	}
 
@@ -610,7 +660,8 @@ const medias = await Promise.all(
 		function posicionar() {
 			if (!alto) return;
 
-			const paso = alto * SEPARACION;
+			const separacion = ancho <= 960 ? 1.15 : SEPARACION;
+			const paso = alto * separacion;
 			const vuelta = total * paso;
 			const desplazamientoEntrada = -ancho * 0.5 * columna.entrada;
 

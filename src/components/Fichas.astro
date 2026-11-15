@@ -20,8 +20,6 @@ const fuerzas = [
   { nombre: "Colabs", valor: 52 },
   { nombre: "Comunidad", valor: 92 },
 ];
-
-const herramientas = ["Ai", "Ps", "Id", "Pr", "Ae", "Fi", "Sp", "Ig", "Tk"];
 ---
 
 <section class="fichas">
@@ -63,16 +61,6 @@ const herramientas = ["Ai", "Ps", "Id", "Pr", "Ae", "Fi", "Sp", "Ig", "Tk"];
 			}
 		</div>
 	</article>
-
-	<article class="ficha">
-		<div class="ficha__head">
-			<h2 class="og-title ficha__title">Herramientas</h2>
-			<span class="ficha__star" aria-hidden="true">✶</span>
-		</div>
-		<ul class="ficha__tools">
-			{herramientas.map((tool) => <li class="ficha__tool">{tool}</li>)}
-		</ul>
-	</article>
 </section>
 
 <style>
@@ -80,7 +68,7 @@ const herramientas = ["Ai", "Ps", "Id", "Pr", "Ae", "Fi", "Sp", "Ig", "Tk"];
 		background: var(--color-og-ink);
 		display: grid;
 		gap: 14px;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
+		grid-template-columns: 355px minmax(0, 1fr);
 		padding: 0 28px 22px;
 	}
 
@@ -148,7 +136,7 @@ const herramientas = ["Ai", "Ps", "Id", "Pr", "Ae", "Fi", "Sp", "Ig", "Tk"];
 		align-items: center;
 		display: grid;
 		gap: 14px;
-		grid-template-columns: minmax(0, 1fr) minmax(80px, 150px);
+		grid-template-columns: 150px minmax(0, 1fr);
 	}
 
 	.ficha__fuerza__nombre {
@@ -171,27 +159,6 @@ const herramientas = ["Ai", "Ps", "Id", "Pr", "Ae", "Fi", "Sp", "Ig", "Tk"];
 		left: 0;
 		position: absolute;
 		top: 0;
-	}
-
-	.ficha__tools {
-		display: grid;
-		gap: 10px;
-		grid-template-columns: repeat(5, minmax(0, 1fr));
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
-
-	.ficha__tool {
-		align-items: center;
-		aspect-ratio: 1;
-		border: 1.4px solid #6f6f6b;
-		border-radius: 12px;
-		color: #f0f0ec;
-		display: flex;
-		font-size: 19px;
-		font-weight: 700;
-		justify-content: center;
 	}
 
 	@media (max-width: 1000px) {
