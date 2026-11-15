@@ -1,0 +1,77 @@
+---
+/**
+ * Declaración fijada: se queda pegada mientras la siguiente sección le pasa
+ * por encima. Pensada para caber siempre en una pantalla, que es la condición
+ * para que el `position: sticky` de `.og-pin` no se rompa.
+ *
+ * El texto es el lema de la marca, tomado del artboard.
+ */
+---
+
+<section class="declaracion" aria-label="El poder del arte urbano">
+	<p class="declaracion__eyebrow">Arte. Calle. Cultura.</p>
+
+	<p class="declaracion__frase">
+		El poder del<br /><span class="declaracion__acento">arte urbano</span>
+	</p>
+
+	<p class="declaracion__pie">Quito, Ecuador — desde 2021</p>
+</section>
+
+<style>
+	.declaracion {
+		align-items: center;
+		background: var(--color-og-ink);
+		border-top: 1px solid var(--color-og-line);
+		color: var(--color-og-bone);
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		justify-content: center;
+		padding: 40px 28px;
+		text-align: center;
+	}
+
+	.declaracion__eyebrow {
+		color: var(--color-og-muted);
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		letter-spacing: 0.3em;
+		margin: 0 0 40px;
+		text-transform: uppercase;
+	}
+
+	.declaracion__frase {
+		font-family: var(--font-display);
+		font-size: clamp(48px, 9vw, 132px);
+		letter-spacing: -0.015em;
+		line-height: 0.92;
+		margin: 0;
+		text-transform: uppercase;
+	}
+
+	.declaracion__acento {
+		color: var(--color-og-lime);
+		display: inline-block;
+		transform: skewX(-11deg);
+	}
+
+	.declaracion__pie {
+		color: var(--color-og-muted);
+		font-size: 10.5px;
+		letter-spacing: 0.22em;
+		margin: 40px 0 0;
+		text-transform: uppercase;
+	}
+
+	@media (max-width: 720px) {
+		.declaracion {
+			padding: 30px 18px;
+		}
+
+		.declaracion__eyebrow,
+		.declaracion__pie {
+			margin-block: 24px;
+		}
+	}
+</style>

@@ -1,0 +1,192 @@
+---
+import { Image } from "astro:assets";
+import qrCode from "../assets/qrCode.jpg";
+
+const contactos = [
+  { icono: "◉", texto: "@flowog_premium", href: "https://instagram.com/flowog_premium" },
+  {
+    icono: "⊕",
+    texto: "instagram.com/flowog_premium",
+    href: "https://instagram.com/flowog_premium",
+  },
+  { icono: "✉", texto: "jharen@flowog.ec", href: "mailto:jharen@flowog.ec" },
+  { icono: "✳", texto: "Quito, Ecuador — envíos a todo el país", href: null },
+];
+---
+
+<footer class="pie" id="contacto">
+	<div class="pie__marca">
+		<p class="pie__marca__texto">
+			<span>SIGUE EL</span><br /><span class="pie__marca__acento">FLOW</span>
+		</p>
+		<span class="pie__asterisco" aria-hidden="true">✱</span>
+	</div>
+
+	<div class="pie__contacto">
+		<div class="pie__contacto__head">
+			<h2 class="og-title pie__contacto__title">Contáctanos</h2>
+			<span class="og-circle" aria-hidden="true">⟶</span>
+		</div>
+		<ul class="pie__lista">
+			{
+				contactos.map((contacto) => (
+					<li class="pie__item">
+						<span class="pie__item__icono" aria-hidden="true">
+							{contacto.icono}
+						</span>
+						{contacto.href ? (
+							<a class="pie__item__texto" href={contacto.href}>
+								{contacto.texto}
+							</a>
+						) : (
+							<span class="pie__item__texto">{contacto.texto}</span>
+						)}
+					</li>
+				))
+			}
+		</ul>
+	</div>
+
+	<div class="pie__qr">
+		<p class="pie__qr__titulo">Escanea y síguenos</p>
+		<Image src={qrCode} alt="Código QR del Instagram de Flow OG" widths={[170, 340]} sizes="170px" />
+		<p class="pie__qr__pie">El poder del arte urbano.</p>
+	</div>
+</footer>
+
+<style>
+	.pie {
+		background: var(--color-og-ink);
+		border-top: 1px solid var(--color-og-line);
+		display: grid;
+		grid-template-columns: 390px minmax(0, 1fr) 320px;
+		min-height: 290px;
+	}
+
+	.pie__marca {
+		align-items: center;
+		display: flex;
+		padding: 34px 28px;
+		position: relative;
+	}
+
+	.pie__marca__texto {
+		color: #f3f3ef;
+		font-family: var(--font-display);
+		font-size: clamp(56px, 7vw, 92px);
+		line-height: 1.02;
+		margin: 0;
+		transform: scaleY(1.12);
+		transform-origin: left center;
+	}
+
+	.pie__marca__acento {
+		color: var(--color-og-lime);
+	}
+
+	.pie__asterisco {
+		bottom: 22px;
+		color: #f3f3ef;
+		font-size: 34px;
+		font-weight: 300;
+		line-height: 1;
+		position: absolute;
+		right: 20px;
+	}
+
+	.pie__contacto {
+		border-left: 1px solid var(--color-og-line);
+		padding: 34px 30px;
+	}
+
+	.pie__contacto__head {
+		align-items: center;
+		display: flex;
+		gap: 14px;
+		margin-bottom: 26px;
+	}
+
+	.pie__contacto__title {
+		font-size: 21px;
+		margin: 0;
+	}
+
+	.pie__lista {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.pie__item {
+		align-items: center;
+		display: grid;
+		gap: 6px;
+		grid-template-columns: 34px minmax(0, 1fr);
+	}
+
+	.pie__item__icono {
+		color: #f0f0ec;
+		font-size: 15px;
+	}
+
+	.pie__item__texto {
+		color: var(--color-og-text);
+		font-size: 11.5px;
+		letter-spacing: 0.14em;
+		text-decoration: none;
+		text-transform: uppercase;
+	}
+
+	a.pie__item__texto:hover {
+		color: var(--color-og-lime);
+	}
+
+	.pie__qr {
+		align-items: center;
+		background: var(--color-og-lime);
+		color: var(--color-og-ink);
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		justify-content: space-between;
+		padding: 26px 24px;
+	}
+
+	.pie__qr :global(img) {
+		height: 170px;
+		object-fit: contain;
+		width: 170px;
+	}
+
+	.pie__qr__titulo,
+	.pie__qr__pie {
+		letter-spacing: 0.16em;
+		margin: 0;
+		text-align: center;
+		text-transform: uppercase;
+	}
+
+	.pie__qr__titulo {
+		font-size: 12.5px;
+		font-weight: 700;
+	}
+
+	.pie__qr__pie {
+		font-size: 11px;
+		letter-spacing: 0.14em;
+	}
+
+	@media (max-width: 1000px) {
+		.pie {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.pie__contacto {
+			border-left: 0;
+			border-top: 1px solid var(--color-og-line);
+		}
+	}
+</style>

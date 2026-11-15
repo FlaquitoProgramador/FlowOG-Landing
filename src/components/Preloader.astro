@@ -1,0 +1,217 @@
+---
+import logo from "../assets/logoPanel.jpg";
+
+/**
+ * Preloader al estilo de young-multi: logo que se rellena de abajo a arriba
+ * mientras corre un contador, y al terminar el contenido sale hacia arriba
+ * mientras 5 persianas se pliegan desde su borde superior.
+ *
+ * Medidas y tiempos tomados del original:
+ *   - recuadro del logo 200x160, base a opacity .2, relleno por ALTURA
+ *   - 5 columnas, #000, filete derecho rgba(255,255,255,.03)
+ *   - salida: persianas scaleY 1->0 en .9s, escalonadas .1s, arranque a .2s
+ *             contenido a y:-120vh en .9s con retardo .3s
+ *   - easing cubic-bezier(.76, 0, .24, 1)
+ *
+ * El logo es el de Flow OG (blanco sobre negro): su fondo se funde con el del
+ * preloader y solo se ve la marca.
+ */
+const COLUMNAS = 5;
+---
+
+<div class="preloader" role="status" aria-label="Cargando">
+	<div class="preloader__persianas" aria-hidden="true">
+		{Array.from({ length: COLUMNAS }).map(() => <span class="preloader__persiana" />)}
+	</div>
+
+	<div class="preloader__contenido">
+		<div class="preloader__logo" aria-hidden="true">
+			<img class="preloader__logo__base" src={logo.src} alt="" />
+			<div class="preloader__logo__relleno">
+				<img class="preloader__logo__lleno" src={logo.src} alt="" />
+			</div>
+		</div>
+		<div class="preloader__contador" aria-hidden="true">0%</div>
+	</div>
+</div>
+
+<style>
+	.preloader {
+		align-items: center;
+		display: flex;
+		height: 100vh;
+		justify-content: center;
+		left: 0;
+		pointer-events: none;
+		position: fixed;
+		top: 0;
+		width: 100vw;
+		z-index: 9999;
+	}
+
+	.preloader__persianas {
+		display: flex;
+		height: 100%;
+		left: 0;
+		position: absolute;
+		top: 0;
+		width: 100%;
+		z-index: 1;
+	}
+
+	.preloader__persiana {
+		background: #000;
+		border-right: 1px solid rgb(255 255 255 / 0.03);
+		flex: 1;
+		height: 100%;
+		transform: scaleY(1);
+		transform-origin: top;
+	}
+
+	.preloader__contenido {
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		position: relative;
+		z-index: 10;
+	}
+
+	.preloader__logo {
+		height: 160px;
+		margin-bottom: 2rem;
+		position: relative;
+		width: 200px;
+	}
+
+	.preloader__logo__base {
+		height: 100%;
+		left: 0;
+		object-fit: contain;
+		opacity: 0.2;
+		position: absolute;
+		top: 0;
+		width: 100%;
+	}
+
+	/* El relleno crece en ALTURA desde abajo y va destapando la copia encendida. */
+	.preloader__logo__relleno {
+		bottom: 0;
+		height: 0%;
+		left: 0;
+		overflow: hidden;
+		position: absolute;
+		transition: height 0.1s linear;
+		width: 100%;
+	}
+
+	.preloader__logo__lleno {
+		bottom: 0;
+		height: 160px;
+		left: 0;
+		object-fit: contain;
+		opacity: 1;
+		position: absolute;
+		width: 200px;
+	}
+
+	.preloader__contador {
+		color: #fff;
+		font-family: "Antonio", var(--font-display);
+		font-size: 1.5rem;
+		font-variant-numeric: tabular-nums;
+		font-weight: 300;
+		letter-spacing: 0.1em;
+	}
+
+	/* ---- salida ---- */
+	.preloader--fuera .preloader__contenido {
+		transform: translateY(-120vh);
+		transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1) 0.3s;
+	}
+
+	.preloader--fuera .preloader__persiana {
+		transform: scaleY(0);
+		transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+	}
+</style>
+
+<script>
+	import { movimientoReducido } from "../scripts/preferencias";
+
+	/** Arranque del plegado y separación entre columnas, del original. */
+	const RETARDO_PERSIANAS = 0.2;
+	const ESCALONADO = 0.1;
+
+	const raiz = document.documentElement;
+	const preloader = document.querySelector<HTMLElement>(".preloader");
+
+	/** Avisa al resto de la página (el hero espera esto para su entrada). */
+	function terminar(nodo: HTMLElement | null) {
+		raiz.classList.add("og-cargado");
+		raiz.style.removeProperty("overflow");
+		document.dispatchEvent(new CustomEvent("flowog:cargado"));
+
+		if (!nodo) return;
+
+		nodo.querySelectorAll<HTMLElement>(".preloader__persiana").forEach((col, i) => {
+			col.style.transitionDelay = RETARDO_PERSIANAS + i * ESCALONADO + "s";
+		});
+		nodo.classList.add("preloader--fuera");
+
+		// .2 de arranque + 4 escalones + .9 de duración = 1.5s; margen hasta 1.8s.
+		window.setTimeout(() => nodo.remove(), 1800);
+	}
+
+	if (!preloader) {
+		terminar(null);
+	} else {
+		const contador = preloader.querySelector<HTMLElement>(".preloader__contador");
+		const relleno = preloader.querySelector<HTMLElement>(".preloader__logo__relleno");
+
+		// Evita que se pueda hacer scroll por debajo del preloader.
+		raiz.style.overflow = "hidden";
+
+		if (movimientoReducido()) {
+			terminar(preloader);
+		} else {
+			// Señales reales de carga: el 100% no llega antes de tiempo.
+			let cumplidas = 0;
+			const total = 2;
+			const señal = () => {
+				cumplidas++;
+			};
+
+			(document.fonts ? document.fonts.ready : Promise.resolve()).then(señal, señal);
+			if (document.readyState === "complete") señal();
+			else window.addEventListener("load", señal, { once: true });
+
+			let mostrado = 0;
+			const inicio = performance.now();
+
+			const tick = () => {
+				const transcurrido = performance.now() - inicio;
+				const porSeñales = (cumplidas / total) * 100;
+				// Suelo que sube solo para que el contador no se quede clavado.
+				const suelo = Math.min(92, (transcurrido / 1600) * 92);
+				const objetivo = Math.max(porSeñales, suelo);
+
+				mostrado += (objetivo - mostrado) * 0.1;
+				const valor = Math.min(100, Math.round(mostrado));
+
+				if (contador) contador.textContent = valor + "%";
+				if (relleno) relleno.style.height = valor + "%";
+
+				if (cumplidas >= total && valor >= 99) {
+					if (contador) contador.textContent = "100%";
+					if (relleno) relleno.style.height = "100%";
+					window.setTimeout(() => terminar(preloader), 320);
+					return;
+				}
+
+				requestAnimationFrame(tick);
+			};
+
+			requestAnimationFrame(tick);
+		}
+	}
+</script>

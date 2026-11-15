@@ -1,0 +1,203 @@
+---
+const trayectoria = [
+  {
+    titulo: "Jharen funda Flow OG",
+    detalle: "Primeros drops y murales",
+    periodo: "2021 —— 2023",
+  },
+  {
+    titulo: "Flow OG Premium",
+    detalle: "Drops, colabs y música",
+    periodo: "2024 —— hoy",
+  },
+];
+
+const fuerzas = [
+  { nombre: "Arte Urbano", valor: 96 },
+  { nombre: "Streetwear", valor: 80 },
+  { nombre: "Música", valor: 60 },
+  { nombre: "Murales", valor: 88 },
+  { nombre: "Colabs", valor: 52 },
+  { nombre: "Comunidad", valor: 92 },
+];
+
+const herramientas = ["Ai", "Ps", "Id", "Pr", "Ae", "Fi", "Sp", "Ig", "Tk"];
+---
+
+<section class="fichas">
+	<article class="ficha">
+		<div class="ficha__head">
+			<h2 class="og-title ficha__title">Trayectoria</h2>
+			<span class="ficha__star" aria-hidden="true">✶</span>
+		</div>
+		{
+			trayectoria.map((hito) => (
+				<div class="ficha__hito">
+					<h3 class="ficha__hito__titulo">{hito.titulo}</h3>
+					<p class="ficha__hito__detalle">{hito.detalle}</p>
+					<p class="ficha__hito__periodo">{hito.periodo}</p>
+				</div>
+			))
+		}
+	</article>
+
+	<article class="ficha">
+		<div class="ficha__head">
+			<h2 class="og-title ficha__title">Fuerzas</h2>
+			<span class="ficha__star" aria-hidden="true">✶</span>
+		</div>
+		<div class="ficha__fuerzas">
+			{
+				fuerzas.map((fuerza) => (
+					<div class="ficha__fuerza">
+						<span class="ficha__fuerza__nombre">{fuerza.nombre}</span>
+						<span
+							class="ficha__barra"
+							role="img"
+							aria-label={fuerza.nombre + ": " + fuerza.valor + " por ciento"}
+						>
+							<span class="ficha__barra__fill" style={`width:${fuerza.valor}%`} />
+						</span>
+					</div>
+				))
+			}
+		</div>
+	</article>
+
+	<article class="ficha">
+		<div class="ficha__head">
+			<h2 class="og-title ficha__title">Herramientas</h2>
+			<span class="ficha__star" aria-hidden="true">✶</span>
+		</div>
+		<ul class="ficha__tools">
+			{herramientas.map((tool) => <li class="ficha__tool">{tool}</li>)}
+		</ul>
+	</article>
+</section>
+
+<style>
+	.fichas {
+		background: var(--color-og-ink);
+		display: grid;
+		gap: 14px;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		padding: 0 28px 22px;
+	}
+
+	.ficha {
+		border: 1px solid var(--color-og-line);
+		padding: 18px;
+	}
+
+	.ficha__head {
+		align-items: center;
+		display: flex;
+		gap: 12px;
+		margin-bottom: 20px;
+	}
+
+	.ficha__title {
+		font-size: 21px;
+		margin: 0;
+	}
+
+	.ficha__star {
+		color: var(--color-og-lime);
+		font-size: 16px;
+	}
+
+	.ficha__hito {
+		border-top: 1px solid var(--color-og-line-soft);
+		padding-top: 16px;
+	}
+
+	.ficha__hito + .ficha__hito {
+		margin-top: 20px;
+	}
+
+	.ficha__hito__titulo {
+		font-size: 12.5px;
+		font-weight: 700;
+		letter-spacing: 0.12em;
+		margin: 0 0 8px;
+		text-transform: uppercase;
+	}
+
+	.ficha__hito__detalle {
+		color: var(--color-og-soft);
+		font-size: 11.5px;
+		letter-spacing: 0.1em;
+		margin: 0 0 6px;
+		text-transform: uppercase;
+	}
+
+	.ficha__hito__periodo {
+		color: var(--color-og-lime);
+		font-size: 11.5px;
+		letter-spacing: 0.12em;
+		margin: 0;
+	}
+
+	.ficha__fuerzas {
+		display: flex;
+		flex-direction: column;
+		gap: 13px;
+	}
+
+	.ficha__fuerza {
+		align-items: center;
+		display: grid;
+		gap: 14px;
+		grid-template-columns: minmax(0, 1fr) minmax(80px, 150px);
+	}
+
+	.ficha__fuerza__nombre {
+		color: var(--color-og-text);
+		font-size: 11px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
+	.ficha__barra {
+		background: #232323;
+		display: block;
+		height: 11px;
+		position: relative;
+	}
+
+	.ficha__barra__fill {
+		background: var(--color-og-lime);
+		bottom: 0;
+		left: 0;
+		position: absolute;
+		top: 0;
+	}
+
+	.ficha__tools {
+		display: grid;
+		gap: 10px;
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.ficha__tool {
+		align-items: center;
+		aspect-ratio: 1;
+		border: 1.4px solid #6f6f6b;
+		border-radius: 12px;
+		color: #f0f0ec;
+		display: flex;
+		font-size: 19px;
+		font-weight: 700;
+		justify-content: center;
+	}
+
+	@media (max-width: 1000px) {
+		.fichas {
+			grid-template-columns: minmax(0, 1fr);
+			padding: 0 18px 18px;
+		}
+	}
+</style>

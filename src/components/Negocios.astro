@@ -1,0 +1,807 @@
+---
+import { getImage } from "astro:assets";
+
+import bizRopa from "../assets/bizRopa.png";
+import bizSports from "../assets/bizSportsPlaceholder.png";
+import bizMusica from "../assets/bizMusica.png";
+
+/**
+ * "Los Negocios" del artboard Flow OG, con la animación del menú de mattjinn.com:
+ *  - overlay que se disuelve del centro hacia afuera (sprite-sheet de 80 frames, 1.5s)
+ *  - columna de imágenes que entra desde la izquierda (1.5s, expo.inOut)
+ *  - nombres que suben desde una máscara clip-path (0.8s ease-out-quart, delay .6s → .8s)
+ *  - hover: giro 3D letra por letra entre dos copias (stagger .05, power4.out)
+ *
+ * La tipografía es la del artboard (Anton en mayúsculas), no la serif del original.
+ */
+const negocios = [
+  {
+    nombre: "Ropa",
+    etiqueta: "01 — Ropa urbana",
+    descripcion:
+      "Tiradas cortas, diseño propio y estampado a mano. La línea que abrió la marca.",
+    tags: ["Hoodies", "Tees", "Drops limitados"],
+    image: bizRopa,
+    alt: "Prendas de la línea de ropa urbana Flow OG",
+  },
+  {
+    nombre: "Sports",
+    etiqueta: "02 — Deportivo",
+    descripcion:
+      "Uniformes y ropa deportiva para equipos y ligas de Quito. Aguanta la cancha.",
+    tags: ["Uniformes", "Equipos", "Personalizado"],
+    image: bizSports,
+    // El artboard no trae foto para Sports: este slot es un marcador.
+    alt: "",
+    pendiente: true,
+  },
+  {
+    nombre: "Música",
+    etiqueta: "03 — Música",
+    descripcion:
+      "Sencillos y colabs bajo el sello Flow OG. «You Got It» con Xavi Ykz y Tenzin.",
+    tags: ["Singles", "Colabs", "Sello propio"],
+    image: bizMusica,
+    alt: "Portada del single «You Got It»",
+  },
+];
+
+const medias = await Promise.all(
+  negocios.map(async (negocio) => {
+    const optimizada = await getImage({ src: negocio.image, width: 700, format: "webp" });
+    return {
+      src: optimizada.src,
+      width: 700,
+      height: Math.round((700 * negocio.image.height) / negocio.image.width),
+    };
+  }),
+);
+---
+
+<section class="negocios" id="negocios" aria-labelledby="negocios-titulo">
+	<header class="negocios__head og-rule">
+		<div class="negocios__head__group">
+			<h2 class="og-title" id="negocios-titulo">Los Negocios</h2>
+			<span class="negocios__star" aria-hidden="true">✶</span>
+		</div>
+		<a class="negocios__head__link" href="https://instagram.com/flowog_premium" aria-label="Ver todo en Instagram">
+			<span>Ver todo en Instagram</span>
+			<span class="og-circle" aria-hidden="true">⟶</span>
+		</a>
+	</header>
+
+	<div class="negocios__stage">
+		<div class="negocios__medias">
+			{
+				medias.map((media, i) => (
+					<figure class="negocios__medias__media">
+						<img
+							class="negocios__medias__image"
+							src={media.src}
+							alt={negocios[i].alt}
+							width={media.width}
+							height={media.height}
+							loading="eager"
+							decoding="async"
+							draggable="false"
+						/>
+						{negocios[i].pendiente && (
+							<figcaption class="negocios__medias__pendiente">Foto pendiente</figcaption>
+						)}
+					</figure>
+				))
+			}
+		</div>
+
+		<div class="negocios__panel">
+			<ul class="negocios__list">
+				{
+					negocios.map((negocio, i) => (
+						<li class="negocios__list__item">
+							<button class="negocios__list__link" type="button" data-index={i}>
+								<span class="negocios__list__text" aria-hidden="true">
+									{negocio.nombre}
+								</span>
+								<span class="negocios__list__text" aria-hidden="true">
+									{negocio.nombre}
+								</span>
+								<span class="negocios__list__label">{negocio.nombre}</span>
+							</button>
+						</li>
+					))
+				}
+			</ul>
+
+			<div class="negocios__detail">
+				{
+					negocios.map((negocio, i) => (
+						<article class="negocios__detail__card" data-index={i} aria-hidden={i !== 0}>
+							<p class="negocios__detail__eyebrow">{negocio.etiqueta}</p>
+							<p class="negocios__detail__desc">{negocio.descripcion}</p>
+							<ul class="negocios__detail__tags">
+								{negocio.tags.map((tag) => (
+									<li class="og-chip">{tag}</li>
+								))}
+							</ul>
+						</article>
+					))
+				}
+			</div>
+		</div>
+
+		<noscript>
+			<style>
+				.negocios__list__link,
+				.negocios__footer__link {
+					transform: translateY(0);
+				}
+				.negocios__dissolve,
+				.negocios__medias {
+					display: none;
+				}
+				.negocios__detail__card {
+					opacity: 1;
+					position: static;
+				}
+			</style>
+		</noscript>
+
+		<!-- Dissolve del centro hacia afuera: mismo truco que el original,
+		     un sprite-sheet de 80 frames (10x8) recorrido con mask-position. -->
+		<div class="negocios__dissolve" aria-hidden="true"></div>
+	</div>
+
+	<footer class="negocios__bar">
+		<p class="negocios__bar__hint">Pasa el cursor o usa las flechas</p>
+		<div class="negocios__bar__nav">
+			<span class="negocios__counter" aria-live="polite">01 / 03</span>
+			<button class="negocios__arrow" type="button" data-paso="-1" aria-label="Negocio anterior">⟵</button>
+			<button class="negocios__arrow" type="button" data-paso="1" aria-label="Negocio siguiente">⟶</button>
+		</div>
+	</footer>
+</section>
+
+<style is:global>
+	/* Geometría portada 1:1 del menú de mattjinn.com. Allí `html { font-size: .6944444vw }`,
+	   así que `--og-u` traduce cada rem del original sin perder la escala fluida. */
+	.negocios {
+		background: var(--color-og-ink);
+		color: var(--color-og-bone);
+		position: relative;
+
+		/* 1u == 1rem del menú de mattjinn (10px a 1440 de ancho), pero medido
+		   contra el ancho de esta sección: dentro de .og-shell el viewport miente. */
+		container-type: inline-size;
+		container-name: negocios;
+		--og-u: 0.6944444cqi;
+	}
+
+	/* ---------- cabecera y barra (del artboard) ---------- */
+	.negocios__head,
+	.negocios__bar {
+		align-items: center;
+		display: flex;
+		gap: 16px;
+		justify-content: space-between;
+		padding: 20px 28px;
+	}
+
+	.negocios__bar {
+		border-top: 1px solid var(--color-og-line);
+		padding: 14px 28px;
+	}
+
+	.negocios__head__group {
+		align-items: center;
+		display: flex;
+		gap: 14px;
+	}
+
+	.negocios__star {
+		color: var(--color-og-lime);
+		font-size: 20px;
+	}
+
+	.negocios__head__link {
+		align-items: center;
+		color: var(--color-og-text);
+		display: flex;
+		font-size: 11.5px;
+		gap: 14px;
+		letter-spacing: 0.16em;
+		text-decoration: none;
+		text-transform: uppercase;
+		transition: opacity 0.4s ease;
+	}
+
+	.negocios__head__link:hover {
+		opacity: 0.6;
+	}
+
+	.negocios__bar__hint,
+	.negocios__counter {
+		color: var(--color-og-muted);
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		letter-spacing: 0.16em;
+		margin: 0;
+		text-transform: uppercase;
+	}
+
+	.negocios__bar__nav {
+		align-items: center;
+		display: flex;
+		gap: 14px;
+	}
+
+	.negocios__arrow {
+		align-items: center;
+		background: none;
+		border: 1.3px solid var(--color-og-lime);
+		border-radius: 50%;
+		color: var(--color-og-lime);
+		cursor: pointer;
+		display: flex;
+		font-size: 12px;
+		height: 30px;
+		justify-content: center;
+		transition:
+			background 0.3s ease,
+			color 0.3s ease;
+		width: 30px;
+	}
+
+	.negocios__arrow:hover {
+		background: var(--color-og-lime);
+		color: var(--color-og-ink);
+	}
+
+	/* ---------- escenario ---------- */
+	.negocios__stage {
+		height: min(88vh, 820px);
+		min-height: 560px;
+		overflow: hidden;
+		position: relative;
+	}
+
+	/* ---------- columna de imágenes ---------- */
+	.negocios__medias {
+		cursor: grab;
+		inset: 0;
+		position: absolute;
+		z-index: 1;
+	}
+
+	.negocios__medias.is-dragging {
+		cursor: grabbing;
+	}
+
+	.negocios__medias__media {
+		background: var(--color-og-panel);
+		height: max(238px, calc(var(--og-u) * 40));
+		left: calc(var(--og-u) * 25);
+		margin: 0;
+		/* centra verticalmente sin depender del alto resuelto por max() */
+		margin-top: calc(-0.5 * max(238px, var(--og-u) * 40));
+		position: absolute;
+		top: 50%;
+		transform: translate3d(-50cqi, 0, 0);
+		width: max(200px, calc(var(--og-u) * 33.6));
+		will-change: transform;
+	}
+
+	.negocios__medias__image {
+		display: block;
+		height: 100%;
+		object-fit: cover;
+		user-select: none;
+		width: 100%;
+	}
+
+	.negocios__medias__pendiente {
+		bottom: 12px;
+		color: var(--color-og-muted);
+		font-family: var(--font-mono);
+		font-size: 10px;
+		left: 12px;
+		letter-spacing: 0.16em;
+		position: absolute;
+		text-transform: uppercase;
+	}
+
+	/* ---------- panel: lista + detalle ---------- */
+	.negocios__panel {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		justify-content: center;
+		left: calc(var(--og-u) * 84.5);
+		position: absolute;
+		right: 28px;
+		top: 0;
+		z-index: 2;
+	}
+
+	.negocios__list {
+		align-items: flex-start;
+		display: flex;
+		flex-direction: column;
+		font-family: var(--font-display);
+		font-size: clamp(44px, 6cqi, 86px);
+		letter-spacing: 0.01em;
+		line-height: 1;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		text-transform: uppercase;
+	}
+
+	.negocios__list__item {
+		clip-path: polygon(0% -10%, 100% -10%, 100% 100%, 0% 100%);
+	}
+
+	.negocios__list__item:not(:first-child) {
+		margin-top: 18px;
+	}
+
+	.negocios__list__item:nth-child(2) {
+		margin-left: calc(var(--og-u) * 23.7);
+	}
+
+	.negocios__list__item:nth-child(3) {
+		margin-left: calc(var(--og-u) * 2.7);
+	}
+
+	.negocios__list__link {
+		background: none;
+		border: 0;
+		color: inherit;
+		cursor: pointer;
+		display: block;
+		font: inherit;
+		letter-spacing: inherit;
+		padding: 0;
+		perspective: 2000px;
+		position: relative;
+		text-transform: inherit;
+		transform: translateY(100%);
+		transform-style: preserve-3d;
+		transition:
+			opacity 0.8s var(--ease-out-quart),
+			transform 0.8s var(--ease-out-quart);
+	}
+
+	.negocios--open .negocios__list__link {
+		transform: translateY(0);
+	}
+
+	.negocios--open .negocios__list__item:nth-child(1) .negocios__list__link {
+		transition-delay: 0.6s;
+	}
+	.negocios--open .negocios__list__item:nth-child(2) .negocios__list__link {
+		transition-delay: 0.7s;
+	}
+	.negocios--open .negocios__list__item:nth-child(3) .negocios__list__link {
+		transition-delay: 0.8s;
+	}
+
+	.negocios__list__text {
+		display: block;
+		padding: 0 calc(var(--og-u) * 0.4);
+		transform-style: preserve-3d;
+		white-space: nowrap;
+	}
+
+	.negocios__list__text:nth-child(1) {
+		position: relative;
+	}
+
+	/* La segunda copia entra al 50% de opacidad, igual que en el original. */
+	.negocios__list__text:nth-child(2) {
+		left: 0;
+		opacity: 0.5;
+		position: absolute;
+		top: 0;
+	}
+
+	/* El negocio activo se marca con el acento del artboard. */
+	.negocios__list__link[data-activo="true"] .negocios__list__text {
+		color: var(--color-og-lime);
+	}
+
+	.negocios__char {
+		display: inline-block;
+		transform-style: preserve-3d;
+		will-change: transform, opacity;
+	}
+
+	.negocios__list__label {
+		clip-path: inset(50%);
+		height: 1px;
+		overflow: hidden;
+		position: absolute;
+		white-space: nowrap;
+		width: 1px;
+	}
+
+	.negocios__list__link:focus-visible {
+		outline: 2px solid var(--color-og-lime);
+		outline-offset: 8px;
+	}
+
+	/* ---------- detalle ---------- */
+	.negocios__detail {
+		margin-top: 40px;
+		max-width: 420px;
+		min-height: 190px;
+		position: relative;
+	}
+
+	.negocios__detail__card {
+		inset: 0;
+		opacity: 0;
+		position: absolute;
+	}
+
+	.negocios__detail__eyebrow {
+		color: var(--color-og-lime);
+		font-size: 11px;
+		letter-spacing: 0.2em;
+		margin: 0 0 16px;
+		text-transform: uppercase;
+	}
+
+	.negocios__detail__desc {
+		color: var(--color-og-soft);
+		font-size: 12px;
+		letter-spacing: 0.12em;
+		line-height: 2;
+		margin: 0 0 22px;
+		text-transform: uppercase;
+	}
+
+	.negocios__detail__tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	/* ---------- overlay del dissolve ---------- */
+	.negocios__dissolve {
+		background: var(--color-og-ink);
+		height: 100%;
+		inset: 0;
+		pointer-events: none;
+		position: absolute;
+		width: 100%;
+		z-index: 3;
+
+		-webkit-mask-image: url("/negocios-dissolve.png");
+		-webkit-mask-position: 100% 100%;
+		-webkit-mask-repeat: no-repeat;
+		-webkit-mask-size: 1000% 800%;
+		mask-image: url("/negocios-dissolve.png");
+		mask-position: 100% 100%;
+		mask-repeat: no-repeat;
+		mask-size: 1000% 800%;
+	}
+
+	/* ---------- responsive (el artboard es de ancho fijo: re-derivado) ---------- */
+	@container negocios (max-width: 1080px) {
+		.negocios__panel {
+			left: 6cqi;
+			right: 6cqi;
+		}
+
+		.negocios__medias {
+			opacity: 0.28;
+		}
+
+		.negocios__medias__media {
+			left: auto;
+			right: 4cqi;
+		}
+	}
+
+	@container negocios (max-width: 620px) {
+		.negocios__head,
+		.negocios__bar {
+			padding-left: 18px;
+			padding-right: 18px;
+		}
+
+		.negocios__head__link span:first-child {
+			display: none;
+		}
+
+		.negocios__list {
+			font-size: 13cqi;
+		}
+
+		.negocios__list__item:nth-child(2),
+		.negocios__list__item:nth-child(3) {
+			margin-left: 0;
+		}
+
+		.negocios__detail {
+			margin-top: 28px;
+			min-height: 210px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.negocios__list__link {
+			transition-delay: 0s !important;
+			transition-duration: 0.01ms !important;
+		}
+	}
+</style>
+
+<script>
+	import gsap from "gsap";
+
+	/** Sprite-sheet del dissolve: 10 columnas x 8 filas = 80 frames. */
+	const COLUMNAS = 10;
+	const FILAS = 8;
+
+	/** Separación vertical entre imágenes, como fracción del alto (area.y * .75). */
+	const SEPARACION = 0.75;
+
+	/** map(y, ±length*area.y*.5, ±0.33pi) del original, ya convertido a grados. */
+	const ROTACION_MAX = 59.4;
+
+	/** Desplazamiento horizontal del arco: -0.05 * area.x en el centro. */
+	const ARCO = 0.05;
+
+	/** Umbral para dar por terminado el lerp y soltar el requestAnimationFrame. */
+	const QUIETO = 0.0004;
+
+	function partirEnLetras(elemento: HTMLElement): HTMLElement[] {
+		const texto = elemento.textContent ?? "";
+		elemento.textContent = "";
+
+		return Array.from(texto).map((caracter) => {
+			const span = document.createElement("span");
+			span.className = "negocios__char";
+			span.textContent = caracter === " " ? " " : caracter;
+			elemento.appendChild(span);
+			return span;
+		});
+	}
+
+	function iniciarNegocios(seccion: HTMLElement) {
+		const enlaces = Array.from(
+			seccion.querySelectorAll<HTMLButtonElement>(".negocios__list__link"),
+		);
+		const contenedor = seccion.querySelector<HTMLElement>(".negocios__medias");
+		const imagenes = Array.from(
+			seccion.querySelectorAll<HTMLElement>(".negocios__medias__media"),
+		);
+		const fichas = Array.from(seccion.querySelectorAll<HTMLElement>(".negocios__detail__card"));
+		const overlay = seccion.querySelector<HTMLElement>(".negocios__dissolve");
+		const contador = seccion.querySelector<HTMLElement>(".negocios__counter");
+
+		if (!contenedor || !overlay || imagenes.length === 0) return;
+
+		const total = imagenes.length;
+		const movimientoReducido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		const columna = { actual: 0, objetivo: 0, entrada: 1 };
+
+		// Medidas cacheadas: leerlas dentro del rAF fuerza un layout sincrónico por frame.
+		let ancho = 0;
+		let alto = 0;
+		const medir = () => {
+			ancho = seccion.clientWidth;
+			alto = contenedor.clientHeight;
+		};
+
+		/** Coloca el frame f (0..79) del sprite-sheet. */
+		const mostrarFrame = (f: number) => {
+			const indice = Math.max(0, Math.min(COLUMNAS * FILAS - 1, Math.floor(f)));
+			const x = ((indice % COLUMNAS) / (COLUMNAS - 1)) * 100;
+			const y = (Math.floor(indice / COLUMNAS) / (FILAS - 1)) * 100;
+			overlay.style.maskPosition = x + "% " + y + "%";
+			overlay.style.webkitMaskPosition = x + "% " + y + "%";
+		};
+
+		function posicionar() {
+			if (!alto) return;
+
+			const paso = alto * SEPARACION;
+			const vuelta = total * paso;
+			const desplazamientoEntrada = -ancho * 0.5 * columna.entrada;
+
+			imagenes.forEach((imagen, i) => {
+				const crudo = (i - columna.actual) * paso;
+				// Loop infinito: normaliza la distancia al centro dentro de [-vuelta/2, vuelta/2).
+				const distancia = ((((crudo + vuelta / 2) % vuelta) + vuelta) % vuelta) - vuelta / 2;
+
+				const rotacion = (distancia / (total * alto * 0.5)) * ROTACION_MAX;
+				const arco = -ARCO * ancho * Math.max(0, 1 - Math.abs(distancia) / (alto * 0.5));
+
+				imagen.style.transform =
+					"translate3d(" +
+					(arco + desplazamientoEntrada) +
+					"px, " +
+					distancia +
+					"px, 0) rotate(" +
+					rotacion +
+					"deg)";
+			});
+		}
+
+		// ---- bucle perezoso: sólo corre mientras algo se mueve ----
+		let arrastrando = false;
+		let raf = 0;
+
+		const bucle = () => {
+			columna.actual += (columna.objetivo - columna.actual) * 0.075;
+			const listo = !arrastrando && Math.abs(columna.objetivo - columna.actual) < QUIETO;
+			if (listo) columna.actual = columna.objetivo;
+			posicionar();
+			raf = listo ? 0 : requestAnimationFrame(bucle);
+		};
+
+		const animar = () => {
+			if (!raf) raf = requestAnimationFrame(bucle);
+		};
+
+		medir();
+		new ResizeObserver(() => {
+			medir();
+			posicionar();
+		}).observe(seccion);
+
+		// ---- negocio activo: dispara columna, ficha de detalle y contador ----
+		let activo = -1;
+
+		function activar(indice: number) {
+			const i = ((indice % total) + total) % total;
+			if (i === activo) return;
+			activo = i;
+			columna.objetivo = i;
+			animar();
+
+			enlaces.forEach((enlace, n) => enlace.setAttribute("data-activo", String(n === i)));
+
+			fichas.forEach((ficha, n) => {
+				ficha.setAttribute("aria-hidden", String(n !== i));
+				if (movimientoReducido) {
+					ficha.style.opacity = n === i ? "1" : "0";
+				} else {
+					gsap.to(ficha, { opacity: n === i ? 1 : 0, duration: 0.45, ease: "power2.out" });
+				}
+			});
+
+			if (contador) contador.textContent = "0" + (i + 1) + " / 0" + total;
+		}
+
+		// ---- hover: giro 3D letra por letra (port del timeline de mattjinn) ----
+		enlaces.forEach((enlace, i) => {
+			const textos = enlace.querySelectorAll<HTMLElement>(".negocios__list__text");
+			let entrar = () => activar(i);
+
+			if (!movimientoReducido && textos.length === 2) {
+				const salientes = partirEnLetras(textos[0]);
+				const entrantes = partirEnLetras(textos[1]);
+
+				const linea = gsap.timeline({ paused: true });
+				linea.to(
+					salientes,
+					{
+						autoAlpha: 0,
+						duration: 1,
+						ease: "power4.out",
+						rotateX: -90,
+						transformOrigin: "50% 50% -30px",
+						stagger: 0.05,
+					},
+					0,
+				);
+				linea.fromTo(
+					entrantes,
+					{ autoAlpha: 0, rotateX: 90, transformOrigin: "50% 50% -30px" },
+					{ autoAlpha: 1, duration: 1, ease: "power4.out", rotateX: 0, stagger: 0.05 },
+					0,
+				);
+
+				const soloActivar = entrar;
+				entrar = () => {
+					linea.play();
+					soloActivar();
+				};
+				enlace.addEventListener("mouseleave", () => linea.reverse());
+				enlace.addEventListener("blur", () => linea.reverse());
+			}
+
+			enlace.addEventListener("mouseenter", entrar);
+			enlace.addEventListener("focus", entrar);
+			enlace.addEventListener("click", entrar);
+		});
+
+		seccion.querySelectorAll<HTMLElement>(".negocios__arrow").forEach((boton) => {
+			boton.addEventListener("click", () => {
+				activar(activo + Number(boton.dataset.paso ?? 1));
+			});
+		});
+
+		activar(0);
+
+		// ---- arrastre vertical de la columna (solo mouse, para no romper el scroll táctil) ----
+		let inicioY = 0;
+		let objetivoInicial = 0;
+
+		contenedor.addEventListener("pointerdown", (evento) => {
+			if (evento.pointerType !== "mouse") return;
+			arrastrando = true;
+			inicioY = evento.clientY;
+			objetivoInicial = columna.objetivo;
+			contenedor.setPointerCapture(evento.pointerId);
+			contenedor.classList.add("is-dragging");
+			animar();
+		});
+
+		contenedor.addEventListener("pointermove", (evento) => {
+			if (!arrastrando) return;
+			columna.objetivo = objetivoInicial - (evento.clientY - inicioY) / (alto * SEPARACION);
+		});
+
+		const terminarArrastre = () => {
+			if (!arrastrando) return;
+			arrastrando = false;
+			contenedor.classList.remove("is-dragging");
+			// Engancha al negocio más cercano para no dejar la columna a medias.
+			const cercano = Math.round(columna.objetivo);
+			columna.objetivo = cercano;
+			activar(cercano);
+			animar();
+		};
+
+		contenedor.addEventListener("pointerup", terminarArrastre);
+		contenedor.addEventListener("pointercancel", terminarArrastre);
+
+		// ---- entrada de la sección ----
+		if (movimientoReducido) {
+			seccion.classList.add("negocios--open");
+			mostrarFrame(COLUMNAS * FILAS - 1);
+			columna.entrada = 0;
+			posicionar();
+			return;
+		}
+
+		mostrarFrame(0);
+		posicionar();
+
+		const observador = new IntersectionObserver(
+			(entradas) => {
+				for (const entrada of entradas) {
+					if (!entrada.isIntersecting) continue;
+					observador.disconnect();
+					seccion.classList.add("negocios--open");
+					// Mismo recorrido que el original: 80 frames en 1.5s.
+					const frame = { valor: 0 };
+					gsap.to(frame, {
+						valor: COLUMNAS * FILAS - 1,
+						duration: 1.5,
+						ease: "power1.out",
+						onUpdate: () => mostrarFrame(frame.valor),
+						onComplete: () => mostrarFrame(COLUMNAS * FILAS - 1),
+					});
+					gsap.to(columna, {
+						entrada: 0,
+						duration: 1.5,
+						ease: "expo.inOut",
+						onUpdate: posicionar,
+					});
+				}
+			},
+			{ threshold: 0.35 },
+		);
+		observador.observe(seccion);
+	}
+
+	document.querySelectorAll<HTMLElement>(".negocios").forEach(iniciarNegocios);
+</script>

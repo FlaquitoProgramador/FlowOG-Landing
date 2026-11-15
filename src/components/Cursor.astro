@@ -1,0 +1,152 @@
+---
+/**
+ * Cursor al estilo de young-multi.
+ *
+ * La clave es `mix-blend-mode: difference`: el cursor invierte lo que tiene
+ * debajo, así que se ve tanto sobre el negro del sitio como sobre las fotos
+ * claras, sin cambiar de color por código.
+ *
+ * Medidas del original: punto 8px blanco, anillo 40px con borde de 1px a
+ * rgba(255,255,255,.5), y transición solo de width/height a .2s.
+ *
+ * Solo se activa con puntero fino: en táctil no hay cursor que sustituir.
+ */
+---
+
+<div class="cursor" aria-hidden="true">
+	<span class="cursor__punto"></span>
+	<span class="cursor__anillo"></span>
+</div>
+
+<style is:global>
+	.cursor {
+		display: none;
+	}
+
+	/* La clase la pone el script solo si hay puntero fino. */
+	.og-cursor .cursor {
+		display: block;
+	}
+
+	.og-cursor,
+	.og-cursor a,
+	.og-cursor button,
+	.og-cursor [role="button"],
+	.og-cursor input,
+	.og-cursor textarea,
+	.og-cursor select {
+		cursor: none;
+	}
+
+	.cursor__punto,
+	.cursor__anillo {
+		border-radius: 50%;
+		left: 0;
+		mix-blend-mode: difference;
+		pointer-events: none;
+		position: fixed;
+		top: 0;
+		will-change: transform;
+	}
+
+	.cursor__punto {
+		background: #fff;
+		height: 8px;
+		width: 8px;
+		z-index: 99999;
+	}
+
+	.cursor__anillo {
+		border: 1px solid rgb(255 255 255 / 0.5);
+		height: 40px;
+		transition:
+			width 0.2s,
+			height 0.2s;
+		width: 40px;
+		z-index: 99998;
+	}
+
+	.cursor--activo .cursor__anillo {
+		height: 64px;
+		width: 64px;
+	}
+
+	.cursor--fuera .cursor__punto,
+	.cursor--fuera .cursor__anillo {
+		opacity: 0;
+	}
+</style>
+
+<script>
+	import { punteroFino } from "../scripts/preferencias";
+
+	const SELECTOR_INTERACTIVO = 'a, button, [role="button"], input, textarea, select, summary';
+
+	function iniciarCursor() {
+		const cursor = document.querySelector<HTMLElement>(".cursor");
+		const punto = cursor?.querySelector<HTMLElement>(".cursor__punto");
+		const anillo = cursor?.querySelector<HTMLElement>(".cursor__anillo");
+		if (!cursor || !punto || !anillo || !punteroFino()) return;
+
+		document.documentElement.classList.add("og-cursor");
+
+		const raton = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+		const seguidor = { ...raton };
+		let visible = false;
+		let raf = 0;
+
+		// El -50% va en el propio transform: así el centrado no depende de
+		// márgenes y el navegador puede componer solo con la GPU.
+		const colocar = (nodo: HTMLElement, x: number, y: number) => {
+			nodo.style.transform = "translate(" + x + "px," + y + "px) translate(-50%,-50%)";
+		};
+
+		const bucle = () => {
+			seguidor.x += (raton.x - seguidor.x) * 0.16;
+			seguidor.y += (raton.y - seguidor.y) * 0.16;
+			colocar(anillo, seguidor.x, seguidor.y);
+
+			const quieto =
+				Math.abs(raton.x - seguidor.x) < 0.1 && Math.abs(raton.y - seguidor.y) < 0.1;
+			raf = quieto ? 0 : requestAnimationFrame(bucle);
+		};
+
+		const animar = () => {
+			if (!raf) raf = requestAnimationFrame(bucle);
+		};
+
+		colocar(punto, raton.x, raton.y);
+		colocar(anillo, seguidor.x, seguidor.y);
+		cursor.classList.add("cursor--fuera");
+
+		document.addEventListener(
+			"pointermove",
+			(evento) => {
+				if (evento.pointerType !== "mouse") return;
+				raton.x = evento.clientX;
+				raton.y = evento.clientY;
+				colocar(punto, raton.x, raton.y);
+
+				if (!visible) {
+					visible = true;
+					cursor.classList.remove("cursor--fuera");
+				}
+				animar();
+			},
+			{ passive: true },
+		);
+
+		document.addEventListener("pointerover", (evento) => {
+			const destino = evento.target as Element | null;
+			if (!destino?.closest) return;
+			cursor.classList.toggle("cursor--activo", !!destino.closest(SELECTOR_INTERACTIVO));
+		});
+
+		document.addEventListener("pointerleave", () => {
+			visible = false;
+			cursor.classList.add("cursor--fuera");
+		});
+	}
+
+	iniciarCursor();
+</script>

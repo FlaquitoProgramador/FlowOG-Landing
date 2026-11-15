@@ -1,6 +1,8 @@
 # dependencies
 node_modules/
-
+.claude/skills/
+.claude/skills-lock.json
+.vscode/
 # build output
 dist/
 .astro/

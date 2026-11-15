@@ -1,0 +1,46 @@
+---
+/**
+ * Scroll suave con Lenis.
+ *
+ * Lenis sigue usando el scroll nativo del documento, así que los
+ * IntersectionObserver y el `position: sticky` de las secciones fijadas
+ * siguen funcionando sin tocarlos.
+ */
+---
+
+<script>
+	import Lenis from "lenis";
+	import { movimientoReducido } from "../scripts/preferencias";
+
+	function iniciarScroll() {
+		if (movimientoReducido()) return;
+
+		const lenis = new Lenis({
+			duration: 1.05,
+			easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+			// En táctil el scroll nativo ya es bueno y suavizarlo se siente pegajoso.
+			smoothWheel: true,
+			syncTouch: false,
+		});
+
+		const bucle = (tiempo: number) => {
+			lenis.raf(tiempo);
+			requestAnimationFrame(bucle);
+		};
+		requestAnimationFrame(bucle);
+
+		// Los enlaces internos deben seguir llevando a su sección.
+		document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((enlace) => {
+			enlace.addEventListener("click", (evento) => {
+				const id = enlace.getAttribute("href");
+				if (!id || id === "#") return;
+				const destino = document.querySelector(id);
+				if (!destino) return;
+				evento.preventDefault();
+				lenis.scrollTo(destino as HTMLElement, { offset: 0 });
+			});
+		});
+	}
+
+	iniciarScroll();
+</script>

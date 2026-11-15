@@ -1,5 +1,17 @@
 ---
 import "../styles/global.css";
+
+import Preloader from "../components/Preloader.astro";
+import Cursor from "../components/Cursor.astro";
+import SmoothScroll from "../components/SmoothScroll.astro";
+
+import TopBar from "../components/TopBar.astro";
+import HeroFluid from "../components/HeroFluid.astro";
+import Negocios from "../components/Negocios.astro";
+import Jharen from "../components/Jharen.astro";
+import QueHacemos from "../components/QueHacemos.astro";
+import Fichas from "../components/Fichas.astro";
+import Footer from "../components/Footer.astro";
 ---
 
 <html lang="es">
@@ -9,12 +21,41 @@ import "../styles/global.css";
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Flow OG</title>
+		<meta
+			name="description"
+			content="Flow OG — marca urbana de Quito: ropa urbana, Flow OG Sports y música bajo un mismo sello. Fundada por Jharen Adrián."
+		/>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Anton&family=Antonio:wght@300;700&family=Archivo:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap"
+		/>
+		<title>Flow OG — El poder del arte urbano</title>
 	</head>
-	<body class="min-h-screen font-sans">
-		<main class="flex min-h-screen flex-col items-center justify-center gap-6">
-			<h1 class="text-[13rem] leading-none font-bold tracking-tight">OG</h1>
-			<div class="h-4 w-[40vw] max-w-[480px] bg-og-lime"></div>
-		</main>
+	<body>
+		<Preloader />
+		<Cursor />
+		<SmoothScroll />
+
+		<div class="og-shell">
+			<TopBar />
+			<main>
+				{/* El hero queda fijado y Los Negocios le pasa por encima. */}
+				<div class="og-pin" style="--og-pin-alto: 200vh">
+					<div class="og-pin__capa">
+						<HeroFluid />
+					</div>
+				</div>
+
+				<Negocios />
+
+				{/* Trae su propio viewport fijado. */}
+				<Jharen />
+				<QueHacemos />
+				<Fichas />
+			</main>
+			<Footer />
+		</div>
 	</body>
 </html>

@@ -1,15 +1,149 @@
 @import "tailwindcss";
 
 @theme {
-  /* Paleta base tomada del bundle "Flow OG Portfolio" */
+  /* Paleta del artboard "Flow OG Portfolio" */
   --color-og-ink: #0b0b0b;
+  --color-og-panel: #0e0e0e;
   --color-og-bone: #f2efe8;
   --color-og-lime: #d9f20d;
 
-  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* Bordes y textos secundarios del diseño */
+  --color-og-line: #2b2b2b;
+  --color-og-line-soft: #1e1e1e;
+  --color-og-edge: #3a3a3a;
+  --color-og-text: #e6e6e2;
+  --color-og-soft: #cfcfca;
+  --color-og-dim: #a3a39d;
+  --color-og-muted: #8d8d88;
+
+  --font-display: "Anton", "Arial Narrow", Impact, sans-serif;
+  --font-sans: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "Space Mono", "Courier New", monospace;
+}
+
+:root {
+  /* Cromado de young-multi: el corte duro en 50/51% es lo que lo hace
+     leer como metal reflejando, en vez de un degradado gris cualquiera. */
+  --gradient-chrome: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #b0b0b0 30%,
+    #333333 50%,
+    #555555 51%,
+    #888888 100%
+  );
+  --gradient-chrome-hover: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #dddddd 30%,
+    #555555 50%,
+    #777777 51%,
+    #aaaaaa 100%
+  );
+  /* Barrido de brillo horizontal, el de sus enlaces de menú. */
+  --gradient-brillo: linear-gradient(90deg, #ffffff, #999999, #ffffff);
+
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Curvas portadas de mattjinn.com */
+  --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+
+  color-scheme: dark;
 }
 
 body {
   background-color: var(--color-og-ink);
   color: var(--color-og-bone);
+  font-family: var(--font-sans);
+}
+
+/* Reglas compartidas por las secciones portadas del artboard */
+.og-shell {
+  margin: 0 auto;
+  max-width: 1400px;
+}
+
+.og-rule {
+  border-bottom: 1px solid var(--color-og-line);
+}
+
+.og-eyebrow {
+  color: var(--color-og-muted);
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+.og-title {
+  font-family: var(--font-sans);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.og-chip {
+  border: 1px solid var(--color-og-edge);
+  color: var(--color-og-text);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  padding: 7px 12px;
+  text-transform: uppercase;
+}
+
+.og-circle {
+  align-items: center;
+  border: 1.3px solid var(--color-og-lime);
+  border-radius: 50%;
+  color: var(--color-og-lime);
+  display: flex;
+  flex: none;
+  font-size: 12px;
+  height: 26px;
+  justify-content: center;
+  width: 26px;
+}
+
+/* Secciones fijadas: el bloque reserva altura de scroll y la capa se queda
+   pegada arriba mientras la siguiente sección le pasa por encima.
+   Ningún ancestro puede llevar overflow:hidden o el sticky deja de funcionar. */
+.og-pin {
+  height: var(--og-pin-alto, 200vh);
+  position: relative;
+}
+
+.og-pin__capa {
+  height: 100svh;
+  overflow: hidden;
+  position: sticky;
+  top: 0;
+  z-index: 0;
+}
+
+/* La sección siguiente se sube una pantalla y viaja por encima de la capa
+   fijada: eso es lo que produce el solape, no el sticky por sí solo.
+
+   Va promovida a su propia capa a propósito. Tiene que pintarse por delante de
+   un sticky que ya está compuesto (lleva dentro el canvas WebGL del hero) y a
+   la vez lleva hijos promovidos dentro. Sin capa propia, al subir no se borra
+   lo que la sección va dejando atrás y se ve estampada varias veces por la
+   pantalla.
+
+   `will-change` es el que hace el trabajo, y no sobra junto al `translateZ(0)`:
+   ese truco dejó de garantizar la promoción cuando Chrome pasó a componer
+   después de pintar, y aquí se quedaba en pista ignorada —el rastro salía
+   precisamente por eso—. El `translateZ(0)` se queda porque además fija a esta
+   sección como bloque contenedor de sus descendientes posicionados.
+
+   El fondo opaco es parte del arreglo: una capa translúcida vuelve a obligar a
+   repintar lo de debajo. */
+.og-pin + * {
+  background-color: var(--color-og-ink);
+  isolation: isolate;
+  margin-top: -100svh;
+  position: relative;
+  transform: translateZ(0);
+  will-change: transform;
+  z-index: 1;
 }

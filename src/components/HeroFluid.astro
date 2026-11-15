@@ -1,0 +1,424 @@
+---
+/**
+ * Hero con máscara de fluido, al estilo de noth.in.
+ *
+ * El logotipo FLOW OG vive apagado sobre el fondo y el puntero lo va pintando:
+ * la tinta del fluido recorta la máscara con borde duro (anchoBorde 0.01).
+ *
+ * A diferencia del original, la capa base no es un vídeo sino el propio
+ * logotipo atenuado, para que el hero nunca quede en negro si nadie mueve
+ * el ratón (táctil, teclado, rastreadores).
+ */
+const enlaces = [
+  { texto: "Instagram", href: "https://instagram.com/flowog_premium" },
+  { texto: "Spotify", href: "https://open.spotify.com/" },
+];
+---
+
+<section class="herof" id="inicio">
+	<canvas class="herof__canvas" aria-hidden="true"></canvas>
+
+	<h1 class="herof__sr">Flow OG — marca urbana de Quito: ropa, deporte y música</h1>
+
+	<p class="herof__respaldo" aria-hidden="true">FLOW<br />OG</p>
+
+	<div class="herof__ui">
+		<p class="herof__eyebrow"><span class="herof__dash"></span>La marca</p>
+		<p class="herof__lugar">Quito, EC</p>
+
+		<p class="herof__claims">
+			Vestimos la calle.<br />Equipamos el barrio.<br />Sonamos como Quito.
+		</p>
+
+		<div class="herof__acciones">
+			<ul class="herof__enlaces">
+				{
+					enlaces.map((enlace) => (
+						<li>
+							<a href={enlace.href} target="_blank" rel="noopener">
+								{enlace.texto}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+			<a class="herof__pill" href="#contacto">Hablemos</a>
+		</div>
+	</div>
+
+	<p class="herof__pista" aria-hidden="true">Mueve el cursor</p>
+</section>
+
+<style>
+	.herof {
+		background: var(--color-og-ink);
+		border-bottom: 1px solid var(--color-og-line);
+		color: var(--color-og-bone);
+		height: 100svh;
+		min-height: 560px;
+		overflow: hidden;
+		position: relative;
+	}
+
+	.herof__canvas {
+		display: block;
+		height: 100%;
+		inset: 0;
+		position: absolute;
+		width: 100%;
+	}
+
+	/* Título real para lectores de pantalla y buscadores: el logotipo del
+	   canvas es un dibujo, no texto. */
+	.herof__sr {
+		clip-path: inset(50%);
+		height: 1px;
+		margin: 0;
+		overflow: hidden;
+		position: absolute;
+		white-space: nowrap;
+		width: 1px;
+	}
+
+	/* Sólo se ve si no hay WebGL2 o si el usuario pidió menos movimiento. */
+	.herof__respaldo {
+		color: var(--color-og-bone);
+		display: none;
+		font-family: var(--font-display);
+		font-size: clamp(88px, 13vw, 186px);
+		left: 50%;
+		letter-spacing: -0.035em;
+		line-height: 0.84;
+		margin: 0;
+		position: absolute;
+		text-align: center;
+		top: 50%;
+		transform: translate(-50%, -50%) scaleY(1.16);
+	}
+
+	.herof--plano .herof__canvas {
+		display: none;
+	}
+
+	.herof--plano .herof__respaldo {
+		display: block;
+	}
+
+	.herof__ui {
+		display: grid;
+		grid-template-areas:
+			"eyebrow lugar"
+			"claims acciones";
+		grid-template-rows: auto 1fr;
+		height: 100%;
+		padding: 30px;
+		pointer-events: none;
+		position: relative;
+		z-index: 1;
+	}
+
+	.herof__ui a {
+		pointer-events: auto;
+	}
+
+	.herof__eyebrow {
+		align-items: center;
+		display: flex;
+		font-size: 10.5px;
+		gap: 12px;
+		grid-area: eyebrow;
+		letter-spacing: 0.3em;
+		margin: 0;
+		text-transform: uppercase;
+	}
+
+	.herof__dash {
+		background: var(--color-og-bone);
+		display: block;
+		height: 2px;
+		width: 44px;
+	}
+
+	.herof__lugar {
+		font-size: 10.5px;
+		grid-area: lugar;
+		justify-self: end;
+		letter-spacing: 0.2em;
+		margin: 0;
+		text-transform: uppercase;
+	}
+
+	.herof__claims {
+		align-self: end;
+		font-size: 11.5px;
+		grid-area: claims;
+		letter-spacing: 0.16em;
+		line-height: 2.3;
+		margin: 0;
+		text-transform: uppercase;
+	}
+
+	.herof__acciones {
+		align-items: flex-end;
+		align-self: end;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 28px;
+		grid-area: acciones;
+		justify-content: flex-end;
+	}
+
+	.herof__enlaces {
+		display: flex;
+		gap: 20px;
+		list-style: none;
+		margin: 0 0 10px;
+		padding: 0;
+	}
+
+	.herof__enlaces a {
+		color: inherit;
+		font-size: 10.5px;
+		letter-spacing: 0.2em;
+		text-decoration: none;
+		text-transform: uppercase;
+		transition: color 0.3s ease;
+	}
+
+	.herof__enlaces a:hover {
+		color: var(--color-og-lime);
+	}
+
+	.herof__pill {
+		border: 1.4px solid var(--color-og-bone);
+		border-radius: 999px;
+		color: inherit;
+		font-size: 11px;
+		letter-spacing: 0.18em;
+		padding: 12px 20px;
+		text-decoration: none;
+		text-transform: uppercase;
+		transition:
+			background 0.3s ease,
+			color 0.3s ease;
+	}
+
+	.herof__pill:hover {
+		background: var(--color-og-bone);
+		color: var(--color-og-ink);
+	}
+
+	.herof__pista {
+		bottom: 30px;
+		color: var(--color-og-muted);
+		font-family: var(--font-mono);
+		font-size: 10px;
+		left: 50%;
+		letter-spacing: 0.24em;
+		margin: 0;
+		opacity: 0;
+		position: absolute;
+		text-transform: uppercase;
+		transform: translateX(-50%);
+		transition: opacity 0.8s var(--ease-out-quart);
+		z-index: 1;
+	}
+
+	.herof--ocioso .herof__pista {
+		opacity: 1;
+	}
+
+	.herof--plano .herof__pista,
+	.herof--tactil .herof__pista {
+		display: none;
+	}
+
+	@media (max-width: 720px) {
+		.herof__ui {
+			grid-template-areas:
+				"eyebrow lugar"
+				"claims claims"
+				"acciones acciones";
+			grid-template-rows: auto 1fr auto;
+			padding: 20px;
+		}
+
+		.herof__acciones {
+			justify-content: flex-start;
+			margin-top: 24px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.herof__pista {
+			display: none;
+		}
+	}
+</style>
+
+<script>
+	import { crearMascaraFluido } from "../scripts/fluidMask";
+	import { movimientoReducido as prefiereMenosMovimiento, punteroFino } from "../scripts/preferencias";
+
+	/** Tiempo sin input antes de sugerir que el hero es interactivo. */
+	const ESPERA_PISTA = 2600;
+
+	function dibujarLogotipo(ancho: number, alto: number): HTMLCanvasElement {
+		const lienzo = document.createElement("canvas");
+		lienzo.width = ancho;
+		lienzo.height = alto;
+
+		const ctx = lienzo.getContext("2d");
+		if (!ctx) return lienzo;
+
+		// Sólo importa el canal alfa: el color lo pone el shader.
+		ctx.fillStyle = "#fff";
+		ctx.textAlign = "center";
+		ctx.textBaseline = "alphabetic";
+
+		const estiradoY = 1.16;
+		const tamano = Math.min(ancho * 0.26, (alto / estiradoY) * 0.32);
+		const interlinea = tamano * 0.84;
+		ctx.font = tamano + "px Anton, 'Arial Narrow', Impact, sans-serif";
+		// letterSpacing es reciente; si no existe, el logotipo sale sin tracking.
+		if ("letterSpacing" in ctx) ctx.letterSpacing = -0.035 * tamano + "px";
+
+		// Centrado con métricas reales: la altura de mayúsculas de Anton no
+		// coincide con el tamaño de fuente, y a ojo quedaba desplazado.
+		const alturaMayuscula = ctx.measureText("FLOW").actualBoundingBoxAscent || tamano * 0.73;
+		const primeraBase = (alturaMayuscula - interlinea) / 2;
+
+		ctx.translate(ancho / 2, alto / 2);
+		ctx.scale(1, estiradoY);
+
+		ctx.fillText("FLOW", 0, primeraBase);
+		ctx.fillText("OG", 0, primeraBase + interlinea);
+
+		return lienzo;
+	}
+
+	async function iniciar(seccion: HTMLElement) {
+		const canvas = seccion.querySelector<HTMLCanvasElement>(".herof__canvas");
+		if (!canvas) return;
+
+		const movimientoReducido = prefiereMenosMovimiento();
+		const esTactil = !punteroFino();
+
+		if (movimientoReducido) {
+			seccion.classList.add("herof--plano");
+			return;
+		}
+
+		const fluido = crearMascaraFluido(canvas);
+		if (!fluido) {
+			// Sin WebGL2 o sin render a coma flotante: logotipo estático.
+			seccion.classList.add("herof--plano");
+			return;
+		}
+
+		if (esTactil) seccion.classList.add("herof--tactil");
+
+		// Anton llega por Google Fonts: sin esperarla el logotipo saldría en la
+		// tipografía de respaldo y quedaría horneado en la textura.
+		try {
+			await document.fonts.load("400 200px Anton");
+			await document.fonts.ready;
+		} catch {
+			/* si falla, se dibuja con la familia de respaldo */
+		}
+
+		const refrescarLogo = () => {
+			fluido.redimensionar();
+			fluido.usarLogo(dibujarLogotipo(canvas.width, canvas.height));
+		};
+		refrescarLogo();
+
+		let pendiente = 0;
+		window.addEventListener("resize", () => {
+			clearTimeout(pendiente);
+			pendiente = window.setTimeout(refrescarLogo, 150);
+		});
+
+		// ---- entrada automática: pinta el logotipo sin esperar al usuario ----
+		let huboInput = false;
+		const trazo = (t: number) => ({
+			x: 0.12 + t * 0.76,
+			y: 0.5 + Math.sin(t * Math.PI * 1.6) * 0.14,
+		});
+
+		const duracion = 1500;
+
+		const lanzarBarrido = () => {
+			const inicio = performance.now();
+			let anterior = trazo(0);
+
+			const barrido = (ahora: number) => {
+				const t = Math.min((ahora - inicio) / duracion, 1);
+				// Suavizado de salida: entra rápido y frena.
+				const suave = 1 - Math.pow(1 - t, 3);
+				const punto = trazo(suave);
+				fluido.salpicar(punto.x, punto.y, punto.x - anterior.x, punto.y - anterior.y);
+				anterior = punto;
+				if (t < 1) requestAnimationFrame(barrido);
+			};
+			requestAnimationFrame(barrido);
+		};
+
+		// El preloader tapa la pantalla: sin esperarlo, la entrada se gastaría oculta.
+		if (document.documentElement.classList.contains("og-cargado")) {
+			lanzarBarrido();
+		} else {
+			document.addEventListener("flowog:cargado", lanzarBarrido, { once: true });
+		}
+
+		// ---- puntero ----
+		let ultimo: { x: number; y: number } | null = null;
+		let temporizadorPista = 0;
+
+		const reiniciarPista = () => {
+			huboInput = true;
+			seccion.classList.remove("herof--ocioso");
+			clearTimeout(temporizadorPista);
+			if (!esTactil) {
+				temporizadorPista = window.setTimeout(
+					() => seccion.classList.add("herof--ocioso"),
+					ESPERA_PISTA,
+				);
+			}
+		};
+
+		const mover = (evento: PointerEvent) => {
+			const caja = canvas.getBoundingClientRect();
+			const x = (evento.clientX - caja.left) / caja.width;
+			const y = 1 - (evento.clientY - caja.top) / caja.height;
+
+			if (ultimo) {
+				const dx = x - ultimo.x;
+				const dy = y - ultimo.y;
+				// Un movimiento rápido salta varias salpicaduras de ancho y deja
+				// huecos: se rellena interpolando entre la posición anterior y esta.
+				const pasos = Math.min(Math.ceil(Math.hypot(dx, dy) / 0.012), 24);
+				for (let i = 1; i <= pasos; i++) {
+					const t = i / pasos;
+					fluido.salpicar(ultimo.x + dx * t, ultimo.y + dy * t, dx, dy, 1 / pasos);
+				}
+			}
+
+			ultimo = { x, y };
+			reiniciarPista();
+		};
+
+		seccion.addEventListener("pointermove", mover);
+		seccion.addEventListener("pointerleave", () => {
+			ultimo = null;
+		});
+
+		if (!esTactil) {
+			temporizadorPista = window.setTimeout(() => {
+				if (!huboInput) seccion.classList.add("herof--ocioso");
+			}, ESPERA_PISTA);
+		}
+	}
+
+	document.querySelectorAll<HTMLElement>(".herof").forEach(iniciar);
+</script>

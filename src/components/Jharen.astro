@@ -1,0 +1,431 @@
+---
+import { Image } from "astro:assets";
+import retrato from "../assets/bizRopa.png";
+
+const redes = [
+  { texto: "Instagram", href: "https://instagram.com/flowog_premium" },
+  { texto: "Spotify", href: "https://open.spotify.com/" },
+  { texto: "Apple Music", href: "https://music.apple.com/" },
+  { texto: "YouTube", href: "https://youtube.com/" },
+];
+---
+
+<section class="cancion" id="jharen" aria-labelledby="cancion-titulo">
+  <div class="cancion__viewport">
+    <article class="cancion__panel">
+      <div class="cancion__fondo" aria-hidden="true"></div>
+      <div class="cancion__luz" aria-hidden="true"></div>
+      <header class="cancion__texto">
+        <p class="cancion__eyebrow">El fundador</p>
+        <h2 class="cancion__titulo" id="cancion-titulo">Jharen By</h2>
+        <p class="cancion__subtitulo">Jharen Adrián · Fundador y CEO · Quito, EC</p>
+      </header>
+      <figure class="cancion__imagen">
+        <div class="cancion__recorte">
+          <Image src={retrato} alt="Retrato de Jharen Adrián" widths={[480, 720, 1440]}
+            sizes="(max-width: 767px) 90vw, 37vw" />
+        </div>
+        <figcaption class="cancion__marca"><span aria-hidden="true">●</span> CEO / Flow OG</figcaption>
+        <span class="cancion__esquina cancion__esquina--tl" aria-hidden="true"></span>
+        <span class="cancion__esquina cancion__esquina--br" aria-hidden="true"></span>
+      </figure>
+      <div class="cancion__redes">
+        <p class="cancion__redes__titulo">Síguelo</p>
+        <ul>
+          {redes.map((red) => (
+            <li>
+              <a class="cancion__enlace" href={red.href} target="_blank" rel="noopener noreferrer" aria-label={red.texto}>
+                <span class="cancion__enlace__texto" aria-hidden="true">{red.texto}</span>
+                <span class="cancion__flecha" aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <a class="cancion__correo" href="mailto:jharen@flowog.ec">jharen@flowog.ec</a>
+      </div>
+    </article>
+    <div class="cancion__guia" aria-hidden="true">
+      <span>Flow OG · El fundador</span>
+      <span>Sigue bajando <span class="cancion__guia__flecha">↓</span></span>
+      <div class="cancion__progreso"></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @font-face {
+    font-family: "Ceo Bernoru";
+    src: url("/bernoru-blackultraexpanded.otf") format("opentype");
+    font-display: swap;
+  }
+  .cancion { position: relative; background: #0a0a0a; color: #fff; }
+  .cancion__viewport { position: relative; }
+  .cancion__panel {
+    position: relative; display: grid; grid-template-columns: 1fr 1fr;
+    gap: 32px; padding: 100px 8%; isolation: isolate;
+    background: #0a0a0a; overflow: hidden;
+  }
+  .cancion__fondo {
+    position: absolute; inset: 0; z-index: -2; pointer-events: none;
+    background-image: linear-gradient(rgb(255 255 255 / .03) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / .03) 1px, transparent 1px);
+    background-size: 100px 100px;
+  }
+  .cancion__luz {
+    position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(circle at var(--luz-x, 50%) var(--luz-y, 40%),
+      rgb(255 255 255 / .05), rgb(0 0 0 / .9) 40%, rgb(30 35 0 / .4));
+    mix-blend-mode: soft-light; transition: opacity .3s; opacity: .7;
+  }
+  .cancion__panel:has(.cancion__enlace:hover, .cancion__enlace:focus-visible) .cancion__luz {
+    background: radial-gradient(circle at var(--luz-x, 50%) var(--luz-y, 40%),
+      rgb(217 242 13 / .3), rgb(0 0 0 / .9) 25%, rgb(30 35 0 / .4));
+    opacity: 1;
+  }
+  .cancion__texto { grid-column: 1 / -1; text-align: center; z-index: 2; pointer-events: none; }
+  .cancion__eyebrow {
+    margin: 0 0 20px; font: 10px var(--font-mono); letter-spacing: .3em;
+    color: var(--color-og-lime); text-transform: uppercase;
+  }
+  .cancion__titulo {
+    margin: 0; font-family: "Ceo Bernoru", var(--font-display); font-size: clamp(32px, 6.25vw, 100px);
+    line-height: 1; text-transform: uppercase;
+    background: linear-gradient(180deg, #fff, #a0a0a0 45%, #000 50%, #444 50.1%, #ccc);
+    background-clip: text; -webkit-background-clip: text; color: transparent;
+    -webkit-text-fill-color: transparent; -webkit-text-stroke: 1px rgb(255 255 255 / .4);
+    filter: drop-shadow(0 5px 10px rgb(0 0 0 / .8));
+  }
+  .cancion__subtitulo {
+    display: inline-block; margin: 20px 0 0; padding: .5em 1em; max-width: 92%;
+    color: rgb(255 255 255 / .7); background: #111; font-family: "Antonio", var(--font-display);
+    font-size: clamp(11px, 1.2vw, 19px); letter-spacing: .3em; text-transform: uppercase;
+  }
+  .cancion__imagen {
+    position: relative; margin: 0; width: 100%; aspect-ratio: 16 / 9; align-self: center;
+    background: #111; border: 1px solid #333; box-shadow: 0 20px 50px #0008;
+    transition: border-color .3s; z-index: 3;
+  }
+  .cancion__recorte { width: 100%; height: 100%; overflow: hidden; }
+  .cancion__imagen img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+  .cancion__esquina {
+    position: absolute; width: 20px; height: 20px; border: 2px solid #fff;
+    pointer-events: none; transition: transform .3s;
+  }
+  .cancion__esquina--tl { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+  .cancion__esquina--br { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+  .cancion__imagen:hover { border-color: #fff; }
+  .cancion__imagen:hover .cancion__esquina--tl { transform: translate(-5px, -5px); }
+  .cancion__imagen:hover .cancion__esquina--br { transform: translate(5px, 5px); }
+  .cancion__marca {
+    position: absolute; top: 16px; left: 16px; padding: 6px 8px; background: #0009;
+    font: 10px var(--font-mono); letter-spacing: .12em; text-transform: uppercase;
+  }
+  .cancion__marca span { color: var(--color-og-lime); }
+  .cancion__redes { align-self: center; min-width: 0; z-index: 4; }
+  .cancion__redes__titulo {
+    margin: 0 0 14px; color: #aaa; font: 10px var(--font-mono);
+    letter-spacing: .24em; text-transform: uppercase;
+  }
+  .cancion__redes ul { display: flex; flex-direction: column; gap: 15px; list-style: none; padding: 0; margin: 0 0 18px; }
+  .cancion__enlace {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    position: relative; overflow: hidden; padding: 15px 20px;
+    border: 1px solid #333; border-left: 4px solid #555;
+    background: #05050599; color: rgb(255 255 255 / .7); text-decoration: none;
+    font-family: "Ceo Bernoru", var(--font-display); font-size: clamp(12px, 1.2vw, 19px); font-weight: 700;
+    line-height: 1.25; letter-spacing: .02em; text-transform: uppercase; box-shadow: 0 5px 15px #0008;
+    transition: border-color .3s, background .3s, color .3s, box-shadow .3s;
+  }
+  .cancion__enlace::after {
+    content: ""; position: absolute; inset: 0; transform: translateX(-150%) skew(-45deg);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / .1), transparent);
+    transition: transform .6s cubic-bezier(.25, .46, .45, .94); pointer-events: none;
+  }
+  .cancion__enlace:hover, .cancion__enlace:focus-visible {
+    border-color: #fff; border-left-color: var(--color-og-lime);
+    background: rgb(255 255 255 / .1); color: #fff; box-shadow: 0 0 20px rgb(217 242 13 / .15);
+  }
+  .cancion__enlace:hover::after, .cancion__enlace:focus-visible::after { transform: translateX(150%) skew(-45deg); }
+  .cancion__enlace:focus-visible, .cancion__correo:focus-visible { outline: 2px solid var(--color-og-lime); outline-offset: 4px; }
+  .cancion__flecha { opacity: .3; transition: opacity .3s, color .3s; }
+  .cancion__enlace:hover .cancion__flecha, .cancion__enlace:focus-visible .cancion__flecha { opacity: 1; color: var(--color-og-lime); }
+  .cancion__correo { margin: 0; color: #aaa; font: 10px var(--font-mono); text-decoration: none; }
+  .cancion__correo:hover { color: var(--color-og-lime); }
+  .cancion__guia { display: none; }
+
+  /* Without JS the panel remains readable in normal document flow. */
+  .cancion[data-animada] { height: 400svh; }
+  .cancion[data-animada] .cancion__viewport { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+  .cancion[data-animada] .cancion__panel {
+    display: grid; place-items: center; grid-template: "stack" 1fr / 1fr;
+    padding: 0; gap: 0; width: 100%; height: 100%; container-type: inline-size;
+  }
+  .cancion[data-animada] .cancion__texto,
+  .cancion[data-animada] .cancion__imagen,
+  .cancion[data-animada] .cancion__redes { grid-area: stack; }
+  /* La promoción a capa sólo mientras la sección anda cerca: tres capas del
+     tamaño del viewport reservadas todo el rato gastan memoria de GPU de balde. */
+  .cancion[data-animada][data-visible] .cancion__texto,
+  .cancion[data-animada][data-visible] .cancion__imagen,
+  .cancion[data-animada][data-visible] .cancion__redes { will-change: transform; }
+  .cancion[data-animada] .cancion__texto { width: 100%; }
+  .cancion[data-animada] .cancion__titulo { font-size: 6.25cqi; }
+  .cancion[data-animada] .cancion__imagen { width: 36.46%; }
+  .cancion[data-animada] .cancion__redes { width: 23%; max-width: 300px; }
+  .cancion[data-animada] .cancion__guia {
+    position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-between;
+    padding: 24px 4%; color: #999; font: 9px var(--font-mono);
+    letter-spacing: .16em; text-transform: uppercase; pointer-events: none;
+  }
+  .cancion__guia__flecha { color: var(--color-og-lime); margin-left: 12px; }
+  .cancion__progreso {
+    position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
+    background: var(--color-og-lime); transform: scaleX(0); transform-origin: left;
+  }
+  @media (max-width: 767px) {
+    .cancion__panel { grid-template-columns: 1fr; padding: 70px 6%; }
+    .cancion__titulo { font-size: 8vw; }
+    .cancion__subtitulo { font-size: 11px; line-height: 1.6; letter-spacing: .14em; }
+    .cancion__redes ul { gap: 8px; margin-bottom: 10px; }
+    .cancion__enlace { padding: 12px 15px; font-size: 14px; }
+    .cancion__redes__titulo { margin-bottom: 8px; }
+    .cancion__eyebrow { margin-bottom: 14px; }
+    .cancion[data-animada] .cancion__titulo { font-size: 8cqi; }
+    .cancion[data-animada] .cancion__imagen { width: 90%; max-width: 52svh; }
+    .cancion[data-animada] .cancion__redes { width: 85%; max-width: 480px; }
+    .cancion__marca { top: 8px; left: 8px; font-size: 8px; }
+  }
+  @media (max-width: 767px) and (max-height: 740px) {
+    .cancion__enlace { padding: 9px 15px; font-size: 12px; }
+    .cancion[data-animada] .cancion__imagen { max-width: 46svh; }
+    .cancion[data-animada] .cancion__guia { padding: 18px 4%; font-size: 8px; }
+  }
+</style>
+
+<script>
+  import gsap from "gsap";
+  import { movimientoReducido, punteroFino } from "../scripts/preferencias";
+
+  /**
+   * Momento en que las redes acaban de aparecer, en unidades de la línea de
+   * tiempo (1 = una altura de viewport scrolleada). Sale de cómo está montada
+   * la línea más abajo: arranca en 1.82 y dura 0.7.
+   */
+  const ENTRAN_REDES = 2.52;
+
+  /** Recorrido total: lo que dura el guion más medio viewport de sostenido. */
+  const RECORRIDO = 3;
+
+  const CARACTERES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&@";
+
+  function iniciarCeo(seccion: HTMLElement) {
+    if (seccion.dataset.iniciada) return;
+    seccion.dataset.iniciada = "true";
+    if (movimientoReducido()) return;
+
+    const viewport = seccion.querySelector<HTMLElement>(".cancion__viewport")!;
+    const panel = seccion.querySelector<HTMLElement>(".cancion__panel")!;
+    const luz = panel.querySelector<HTMLElement>(".cancion__luz")!;
+    const texto = panel.querySelector<HTMLElement>(".cancion__texto")!;
+    const imagen = panel.querySelector<HTMLElement>(".cancion__imagen")!;
+    const redes = panel.querySelector<HTMLElement>(".cancion__redes")!;
+    const barra = seccion.querySelector<HTMLElement>(".cancion__progreso")!;
+    const movil = window.matchMedia("(max-width: 767px)");
+    let linea: gsap.core.Timeline;
+    let alto = 1;
+    /** Distancia del arranque de la sección al inicio del documento, cacheada. */
+    let arranque = 0;
+    let animada = false;
+    let visible = false;
+
+    // ---- colocación por scroll ----
+    // Espejo de lo ya escrito en el DOM: `inert` sólo se toca cuando cambia de
+    // verdad. Arranca igual que el HTML servido.
+    let tiempoPrevio = -1;
+    let redesInertes = false;
+
+    /**
+     * Se apoya en `scrollY` y en `arranque` en vez de medir la sección: así no
+     * queda ni una lectura de layout por frame y se puede llamar desde el evento
+     * de scroll sin perder un frame en un `requestAnimationFrame`.
+     */
+    const colocar = () => {
+      if (!animada) return;
+      const recorrido = Math.min(Math.max(0, (window.scrollY - arranque) / alto), linea.duration());
+      if (recorrido === tiempoPrevio) return;
+      tiempoPrevio = recorrido;
+      linea.time(recorrido);
+
+      // Mantener el foco fuera de los enlaces mientras siguen viajando.
+      const sinRedes = recorrido < ENTRAN_REDES;
+      if (sinRedes !== redesInertes) redes.inert = redesInertes = sinRedes;
+    };
+
+    // ---- medidas ----
+    let medida = 0;
+    const medir = () => {
+      medida = 0;
+      linea?.kill();
+      // Los viewports apaisados y bajos se quedan con la maqueta estática legible.
+      animada = window.innerHeight >= 600;
+      seccion.toggleAttribute("data-animada", animada);
+      arranque = seccion.getBoundingClientRect().top + window.scrollY;
+      tiempoPrevio = -1;
+      if (!animada) {
+        gsap.set([texto, imagen, redes, barra], { clearProps: "transform,opacity,visibility" });
+        redes.inert = redesInertes = false;
+        return;
+      }
+      alto = viewport.clientHeight;
+      const ancho = viewport.clientWidth;
+      const compacto = movil.matches && alto <= 740;
+      // Referencia: sección de 1500vh, recorrido de 1400vh. Se conserva su primer
+      // 35% en unidades de viewport y luego se sostiene el panel medio viewport.
+      linea = gsap.timeline({ paused: true, defaults: { ease: "none" } });
+      linea.fromTo(texto, { y: 0 }, { y: -alto * (movil.matches ? .32 : .25), duration: .98 }, 0);
+      linea.fromTo(imagen, { y: alto, xPercent: 0, scale: 1 },
+        { y: alto * (movil.matches ? (compacto ? -.1 : -.04) : .15), duration: .98 }, 0);
+      linea.to(imagen, { xPercent: movil.matches ? 0 : -40, scale: .9, duration: .56 }, 1.12);
+      linea.fromTo(redes, { autoAlpha: 0, x: movil.matches ? 0 : ancho * .5, y: alto * (movil.matches ? .8 : .15) },
+        { autoAlpha: 1, x: movil.matches ? 0 : ancho * .24, y: alto * (movil.matches ? (compacto ? .24 : .27) : .15), duration: .7 }, 1.82);
+      linea.fromTo(barra, { scaleX: 0 }, { scaleX: 1, duration: RECORRIDO }, 0);
+      colocar();
+    };
+    /** Junta en una sola remedida las que llegan por varias vías en el mismo frame. */
+    const programarMedida = () => { if (!medida) medida = requestAnimationFrame(medir); };
+
+    /** Lo de arriba puede crecer (imágenes, fuentes) y correr el arranque. */
+    const remedirArranque = () => {
+      if (medida) return;
+      const nuevo = seccion.getBoundingClientRect().top + window.scrollY;
+      if (nuevo === arranque) return;
+      arranque = nuevo;
+      tiempoPrevio = -1;
+      colocar();
+    };
+
+    const alScroll = () => { if (visible) colocar(); };
+
+    // Fuera de cuadro no hay nada que colocar, y sin `will-change` el navegador
+    // suelta las capas de GPU de los tres elementos animados.
+    const vigia = new IntersectionObserver(([entrada]) => {
+      visible = entrada.isIntersecting;
+      seccion.toggleAttribute("data-visible", visible);
+      if (visible) colocar();
+    }, { rootMargin: "50% 0px" });
+    vigia.observe(seccion);
+
+    const medidor = new ResizeObserver(programarMedida);
+    medidor.observe(viewport);
+    const medidorPagina = new ResizeObserver(remedirArranque);
+    medidorPagina.observe(document.body);
+    medir();
+    window.addEventListener("scroll", alScroll, { passive: true });
+    window.addEventListener("resize", programarMedida);
+    window.addEventListener("load", remedirArranque);
+    document.fonts.ready.then(programarMedida);
+
+    // ---- puntero: una sola pasada por frame para la luz y los botones ----
+    let raton = 0;
+    let luzX = 0, luzY = 0, luzPendiente = false;
+    let magnetico: HTMLElement | null = null;
+    let magX = 0, magY = 0;
+
+    const aplicarPuntero = () => {
+      raton = 0;
+      if (luzPendiente) {
+        luzPendiente = false;
+        const caja = viewport.getBoundingClientRect();
+        // La variable va en la capa de luz y no en la sección para no invalidar
+        // el estilo de todo el subárbol en cada movimiento del ratón.
+        luz.style.setProperty("--luz-x", `${(luzX - caja.left) / caja.width * 100}%`);
+        luz.style.setProperty("--luz-y", `${(luzY - caja.top) / caja.height * 100}%`);
+      }
+      if (magnetico) {
+        const enlace = magnetico;
+        magnetico = null;
+        // El centro sin transformar: el panel se mueve con el scroll, así que el
+        // rectángulo guardado al entrar se queda viejo enseguida.
+        const caja = enlace.getBoundingClientRect();
+        const centroX = caja.left + caja.width / 2 - Number(gsap.getProperty(enlace, "x"));
+        const centroY = caja.top + caja.height / 2 - Number(gsap.getProperty(enlace, "y"));
+        gsap.to(enlace, { x: (magX - centroX) * .2, y: (magY - centroY) * .2,
+          duration: .4, ease: "power2.out", overwrite: true });
+      }
+    };
+    const programarPuntero = () => { if (!raton) raton = requestAnimationFrame(aplicarPuntero); };
+
+    const limpiezas: (() => void)[] = [];
+    seccion.querySelectorAll<HTMLAnchorElement>(".cancion__enlace").forEach((enlace) => {
+      const etiqueta = enlace.querySelector<HTMLElement>(".cancion__enlace__texto")!;
+      const original = etiqueta.textContent ?? "";
+      // Mismo ritmo de 30 ms que antes, pero atado al frame: ni escribe dos veces
+      // en el mismo repintado ni sigue corriendo con la pestaña de fondo.
+      let rafTexto = 0;
+      let inicio = 0;
+      let ultimo = -1;
+      const restaurar = () => {
+        if (rafTexto) cancelAnimationFrame(rafTexto);
+        rafTexto = 0;
+        etiqueta.textContent = original;
+      };
+      const paso = () => {
+        const frame = Math.floor((performance.now() - inicio) / 30);
+        if (frame >= 15) { restaurar(); return; }
+        rafTexto = requestAnimationFrame(paso);
+        if (frame === ultimo) return;
+        ultimo = frame;
+        const resueltos = frame < 10 ? -1 : Math.floor((frame - 10) / 5 * original.length);
+        etiqueta.textContent = Array.from(original, (letra, i) => letra === " " || i <= resueltos
+          ? letra : CARACTERES[Math.floor(Math.random() * CARACTERES.length)]).join("");
+      };
+      const entrar = () => {
+        restaurar();
+        inicio = performance.now();
+        ultimo = -1;
+        rafTexto = requestAnimationFrame(paso);
+      };
+      const mover = (evento: PointerEvent) => {
+        if (!punteroFino()) return;
+        magnetico = enlace;
+        magX = evento.clientX;
+        magY = evento.clientY;
+        programarPuntero();
+      };
+      const salir = () => {
+        restaurar();
+        if (magnetico === enlace) magnetico = null;
+        gsap.to(enlace, { x: 0, y: 0, duration: .5, ease: "elastic.out(1, .5)", overwrite: true });
+      };
+      enlace.addEventListener("pointerenter", entrar);
+      enlace.addEventListener("pointermove", mover);
+      enlace.addEventListener("pointerleave", salir);
+      enlace.addEventListener("focus", entrar);
+      enlace.addEventListener("blur", salir);
+      limpiezas.push(() => { restaurar(); gsap.killTweensOf(enlace); });
+    });
+
+    const moverLuz = (evento: PointerEvent) => {
+      if (!punteroFino()) return;
+      luzX = evento.clientX;
+      luzY = evento.clientY;
+      luzPendiente = true;
+      programarPuntero();
+    };
+    viewport.addEventListener("pointermove", moverLuz);
+    document.addEventListener("astro:before-swap", () => {
+      cancelAnimationFrame(medida);
+      cancelAnimationFrame(raton);
+      linea?.kill();
+      vigia.disconnect();
+      medidor.disconnect();
+      medidorPagina.disconnect();
+      window.removeEventListener("scroll", alScroll);
+      window.removeEventListener("resize", programarMedida);
+      window.removeEventListener("load", remedirArranque);
+      viewport.removeEventListener("pointermove", moverLuz);
+      limpiezas.forEach((limpiar) => limpiar());
+    }, { once: true });
+  }
+  document.querySelectorAll<HTMLElement>(".cancion").forEach(iniciarCeo);
+</script>
